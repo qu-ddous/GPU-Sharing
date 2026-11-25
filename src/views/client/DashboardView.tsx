@@ -157,7 +157,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                 <Monitor className="w-4 h-4" /> Method 2: Server Desktop Screen Par Dekhein
               </span>
               <p className="text-slate-600 leading-relaxed text-[11px]">
-                Desktop computer par <strong>GPUWorkerServer.exe</strong> open karein ya sidebar mein <strong>"GPU Worker Node"</strong> tab par jayein. Topbar mein IP aur Port seedha likha hota hai (e.g. <code>192.168.99.1:8000</code>). Uspar click karein, wo copy ho jayega!
+                Desktop computer par <strong>GPUShare-Server.exe</strong> open karein ya server console dekhein. Topbar mein IP aur Port seedha likha hota hai (e.g. <code>192.168.99.1:8000</code>). Uspar click karein, wo copy ho jayega!
               </p>
             </div>
 
@@ -325,12 +325,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             </div>
             <div className="flex items-center justify-between mb-1">
               <h4 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                AI Studio & Lens
+                Deep Learning & Vision Studio
               </h4>
               <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600" />
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Train PyTorch CNNs over 100k images, scan photos via Google Lens, or offload Python scripts.
+              Train PyTorch CNNs over 100k images, scan photos with visual classifier, or offload Python scripts.
             </p>
           </div>
 

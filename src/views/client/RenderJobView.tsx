@@ -8,7 +8,11 @@ import {
   FileVideo, 
   Check, 
   Sliders, 
-  HardDrive
+  HardDrive,
+  FolderOpen,
+  ArrowRight,
+  ShieldCheck,
+  CheckCircle2
 } from 'lucide-react';
 import type { ResolutionPreset, NvencPreset } from '../../types/index.js';
 
@@ -64,18 +68,11 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
 
   const handleBrowseFolder = async () => {
     if (window.electronAPI?.openDirectoryDialog) {
-      const dir = await window.electronAPI.openDirectoryDialog({ title: 'Select Output Destination' });
-      if (dir) setOutputFolder(dir);
-    }
-  };
-
-  const handleBrowseUniversalFolder = async () => {
-    if (window.electronAPI?.openDirectoryDialog) {
-      const dir = await window.electronAPI.openDirectoryDialog({ title: 'Select Project Directory to Zip & Offload' });
+      const dir = await window.electronAPI.openDirectoryDialog({ title: 'Select Project Folder to Offload' });
       if (dir) {
         setSelectedFile({
-          name: 'workspace.zip',
-          size: 'Compressing directory...',
+          name: `${dir.split(/[/\\]/).pop() || 'workspace'}.zip`,
+          size: 'Calculating...',
           path: dir,
           checksum: 'Compressing workspace (excluding .git, node_modules)...'
         });
@@ -126,260 +123,263 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
   };
 
   return (
-    <div className="p-8 space-y-8 overflow-y-auto max-h-[calc(100vh-4rem)]">
-      {/* Profile Selector */}
-      <div className="clay-card p-2 grid grid-cols-3 gap-2">
+    <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] max-w-6xl mx-auto">
+      {/* Profile Selector Tabs */}
+      <div className="bg-slate-100 p-1.5 rounded-2xl grid grid-cols-3 gap-1.5 border border-slate-200/80">
         <button
           type="button"
           onClick={() => setProfile('video')}
-          className={`flex items-center justify-center gap-2.5 py-3 rounded-xl text-sm font-bold transition-all ${
+          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all ${
             profile === 'video'
-              ? 'bg-brand-purple text-white shadow-claySm'
-              : 'text-slate-400 hover:text-white hover:bg-surface-800'
+              ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
           }`}
         >
-          <Film className="w-4 h-4" />
-          <span>🎬 Video Transcode (GPU NVENC)</span>
+          <Film className="w-4 h-4 text-indigo-600" />
+          <span>Video Transcode (GPU NVENC)</span>
         </button>
 
         <button
           type="button"
           onClick={() => setProfile('batch')}
-          className={`flex items-center justify-center gap-2.5 py-3 rounded-xl text-sm font-bold transition-all ${
+          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all ${
             profile === 'batch'
-              ? 'bg-brand-purple text-white shadow-claySm'
-              : 'text-slate-400 hover:text-white hover:bg-surface-800'
+              ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
           }`}
         >
-          <Terminal className="w-4 h-4" />
-          <span>⚡ Batch / Shell Script</span>
+          <Terminal className="w-4 h-4 text-indigo-600" />
+          <span>Batch & Shell Automation</span>
         </button>
 
         <button
           type="button"
           onClick={() => setProfile('universal')}
-          className={`flex items-center justify-center gap-2.5 py-3 rounded-xl text-sm font-bold transition-all ${
+          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all ${
             profile === 'universal'
-              ? 'bg-brand-purple text-white shadow-claySm'
-              : 'text-slate-400 hover:text-white hover:bg-surface-800'
+              ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
           }`}
         >
-          <FolderArchive className="w-4 h-4" />
-          <span>🌟 All-in-One (Zip Workspace)</span>
+          <FolderArchive className="w-4 h-4 text-indigo-600" />
+          <span>Universal Folder & Command Runner</span>
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Card 1: File & Folder Picker */}
-        <div className="clay-card p-6 space-y-4">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <UploadCloud className="w-4 h-4 text-brand-purple" />
-            <span>Step 1: Input Payload & Cryptographic Verification</span>
-          </h3>
-
-          <div
-            onClick={profile === 'universal' ? handleBrowseUniversalFolder : handleBrowseFile}
-            className="border-2 border-dashed border-surface-border/70 hover:border-brand-purple/70 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all bg-surface-950/40 hover:bg-surface-900/60"
-          >
-            <div className="w-14 h-14 rounded-2xl bg-brand-purple/15 text-brand-purple flex items-center justify-center mb-3">
-              {profile === 'universal' ? <FolderArchive className="w-7 h-7" /> : <FileVideo className="w-7 h-7" />}
+        {/* Source File / Folder Selection Card */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900">Workload Source Selection</h3>
+              <p className="text-xs text-slate-500">Pick a source video, batch script, or complete project workspace.</p>
             </div>
-            <p className="text-sm font-bold text-slate-200">
-              {profile === 'universal'
-                ? <span>Click to select entire <span className="text-brand-purple underline">Project Folder</span> (auto-zipped) or archive</span>
-                : <span>Drag & drop media file here or <span className="text-brand-purple underline">Browse Computer</span></span>}
-            </p>
-            <p className="text-xs text-slate-500 mt-1">
-              {profile === 'universal'
-                ? 'Excludes .git, node_modules, and __pycache__ automatically'
-                : 'Supports MP4, MOV, MKV, AVI, ZIP archives up to 50 GB'}
-            </p>
+            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              Direct 2.5 Gbps P2P Pipeline
+            </span>
           </div>
 
-          {profile === 'universal' && (
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleBrowseUniversalFolder}
-                className="clay-button-secondary py-2 px-4 text-xs font-semibold text-slate-200 flex items-center gap-2"
-              >
-                <FolderArchive className="w-3.5 h-3.5 text-brand-purple" />
-                Select Project Directory (Auto-Zip)
-              </button>
-              <button
-                type="button"
-                onClick={handleBrowseFile}
-                className="clay-button-secondary py-2 px-4 text-xs font-semibold text-slate-300 flex items-center gap-2"
-              >
-                <UploadCloud className="w-3.5 h-3.5 text-brand-blue" />
-                Select Existing .zip / script
-              </button>
+          <div className="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 hover:bg-slate-50 transition-colors flex flex-col items-center justify-center text-center space-y-3 py-6">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center">
+              {profile === 'universal' ? <FolderArchive className="w-6 h-6" /> : <FileVideo className="w-6 h-6" />}
             </div>
-          )}
+            <div>
+              <p className="text-sm font-bold text-slate-800">
+                {selectedFile ? selectedFile.name : 'Select or Drag & Drop File'}
+              </p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {selectedFile ? `${selectedFile.size} • ${selectedFile.path}` : 'Supported: MP4, MOV, MKV, BAT, PS1, PY, or Project Folders'}
+              </p>
+            </div>
 
-          {selectedFile && (
-            <div className="p-4 rounded-xl bg-surface-800/60 border border-surface-border/50 flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
-              <div className="space-y-1">
-                <p className="font-bold text-white flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-400" />
-                  {selectedFile.name} ({selectedFile.size})
-                </p>
-                <p className="text-slate-400 text-[11px] truncate max-w-xl">
-                  Path: {selectedFile.path}
-                </p>
-                <p className="text-slate-500 text-[10px]">
-                  SHA-256: {selectedFile.checksum}
-                </p>
+            <div className="flex items-center gap-3 pt-1">
+              {profile === 'universal' ? (
+                <button
+                  type="button"
+                  onClick={handleBrowseFolder}
+                  className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <FolderOpen className="w-4 h-4" />
+                  <span>Browse Project Folder</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleBrowseFile}
+                  className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <UploadCloud className="w-4 h-4" />
+                  <span>Browse Local File</span>
+                </button>
+              )}
+            </div>
+
+            {selectedFile?.checksum && (
+              <div className="w-full max-w-lg mt-2 p-2 rounded-lg bg-white border border-slate-200 text-left">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Integrity SHA-256:</span>
+                <span className="text-[11px] font-mono text-slate-600 break-all">{selectedFile.checksum}</span>
               </div>
-              <button
-                type="button"
-                onClick={handleBrowseFile}
-                className="clay-button-secondary px-3 py-1.5 text-xs text-slate-300 font-sans"
-              >
-                Change File
-              </button>
-            </div>
-          )}
-
-          {profile === 'universal' && (
-            <div className="space-y-2 pt-2">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                Execution Command Inside Workspace:
-              </label>
-              <input
-                type="text"
-                value={customCommand}
-                onChange={(e) => setCustomCommand(e.target.value)}
-                className="w-full bg-surface-950 border border-surface-border/70 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-brand-purple"
-                placeholder="e.g. pip install -r requirements.txt && python train.py"
-              />
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* Card 2: Transcode & Execution Settings */}
+        {/* Video Encoder Parameters Card */}
         {profile === 'video' && (
-          <div className="clay-card p-6 space-y-5">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-brand-blue" />
-              <span>Step 2: NVIDIA NVENC Hardware Transcode Settings</span>
-            </h3>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs space-y-5">
+            <div className="flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-indigo-600" />
+              <h3 className="text-sm font-bold text-slate-900">Hardware Transcode Settings (NVENC)</h3>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {/* Target Resolution */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Target Resolution</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Output Resolution</label>
                 <select
                   value={resolution}
                   onChange={(e) => setResolution(e.target.value as ResolutionPreset)}
-                  className="w-full bg-surface-950 border border-surface-border/70 rounded-xl px-3 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-brand-blue"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                 >
-                  <option value="Original">Original Resolution (Source)</option>
+                  <option value="Original">Keep Original Source</option>
                   <option value="4K">4K UHD (3840 x 2160)</option>
-                  <option value="1440p">1440p QHD (2560 x 1440)</option>
-                  <option value="1080p">1080p Full HD (1920 x 1080)</option>
-                  <option value="720p">720p HD (1280 x 720)</option>
+                  <option value="1440p">2K QHD (2560 x 1440)</option>
+                  <option value="1080p">Full HD (1920 x 1080)</option>
+                  <option value="720p">HD (1280 x 720)</option>
                 </select>
               </div>
 
-              {/* Bitrate */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Target Bitrate</label>
+              {/* Bitrate Control */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Target Bitrate</label>
                 <select
                   value={bitrate}
                   onChange={(e) => setBitrate(e.target.value as any)}
-                  className="w-full bg-surface-950 border border-surface-border/70 rounded-xl px-3 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-brand-blue"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                 >
-                  <option value="2M">2 Mbps (Web Draft)</option>
-                  <option value="5M">5 Mbps (Standard Streaming)</option>
-                  <option value="8M">8 Mbps (High Quality 1080p)</option>
-                  <option value="12M">12 Mbps (High Bitrate 1440p)</option>
-                  <option value="20M">20 Mbps (Mastering / 4K)</option>
+                  <option value="2M">2.0 Mbps (Web Small)</option>
+                  <option value="5M">5.0 Mbps (Standard HD)</option>
+                  <option value="8M">8.0 Mbps (High Quality 1080p)</option>
+                  <option value="12M">12.0 Mbps (Pro 1440p)</option>
+                  <option value="20M">20.0 Mbps (Master 4K)</option>
                 </select>
               </div>
 
-              {/* NVENC Preset */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">NVENC Speed/Quality Preset</label>
+              {/* NVENC Tuning Preset */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">NVENC Preset</label>
                 <select
                   value={preset}
                   onChange={(e) => setPreset(e.target.value as NvencPreset)}
-                  className="w-full bg-surface-950 border border-surface-border/70 rounded-xl px-3 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-brand-blue"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                 >
-                  <option value="p1">p1 (Fastest / Lowest Overhead)</option>
-                  <option value="p2">p2 (Faster)</option>
-                  <option value="p3">p3 (Fast)</option>
-                  <option value="p4">p4 (Medium - Balanced)</option>
-                  <option value="p5">p5 (Slow - Recommended High Quality)</option>
-                  <option value="p6">p6 (Slower - Better Compression)</option>
-                  <option value="p7">p7 (Slowest / Maximum Quality)</option>
+                  <option value="p1">p1: Fastest (Low Latency Stream)</option>
+                  <option value="p3">p3: Fast Balanced</option>
+                  <option value="p5">p5: High Quality (Recommended)</option>
+                  <option value="p7">p7: Maximum Visual Fidelity</option>
                 </select>
               </div>
             </div>
 
-            {/* Checkbox: CPU Fallback */}
-            <div className="flex items-center gap-3 pt-2">
-              <input
-                type="checkbox"
-                id="cpuFallback"
-                checked={allowCpuFallback}
-                onChange={(e) => setAllowCpuFallback(e.target.checked)}
-                className="w-4 h-4 rounded bg-surface-950 border-surface-border text-brand-purple focus:ring-0 cursor-pointer"
-              />
-              <label htmlFor="cpuFallback" className="text-xs text-slate-300 font-medium cursor-pointer">
-                Allow automatic CPU software fallback (libx264) if remote NVENC encoder encounters hardware limits
+            {/* Checkbox for CPU Fallback */}
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-slate-800">Multi-Stage Autonomous Fallback Loop</p>
+                <p className="text-[11px] text-slate-500">
+                  Automatically cascade to Intel QSV, AMD AMF, or multi-core CPU libx264 if remote NVENC is busy.
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={allowCpuFallback}
+                  onChange={(e) => setAllowCpuFallback(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
               </label>
             </div>
           </div>
         )}
 
-        {/* Card 3: Output Destination */}
-        <div className="clay-card p-6 space-y-4">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <HardDrive className="w-4 h-4 text-emerald-400" />
-            <span>Step 3: Output Artifact Delivery Destination</span>
-          </h3>
+        {/* Universal Command Runner Card */}
+        {profile === 'universal' && (
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+            <h3 className="text-sm font-bold text-slate-900">Custom Remote Command Execution</h3>
+            <p className="text-xs text-slate-500">
+              The project folder will be extracted to an isolated workspace on the worker node and executed in Windows CMD.
+            </p>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Terminal Execution Command</label>
+              <input
+                type="text"
+                value={customCommand}
+                onChange={(e) => setCustomCommand(e.target.value)}
+                placeholder="e.g. python main.py or npm run build or blender -b scene.blend -a"
+                className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-mono font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
+              />
+            </div>
+          </div>
+        )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Output Filename</label>
+        {/* Output Destination Card */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+          <h3 className="text-sm font-bold text-slate-900">Output Delivery & Filename</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Output File Name</label>
               <input
                 type="text"
                 value={outputFilename}
                 onChange={(e) => setOutputFilename(e.target.value)}
-                className="w-full bg-surface-950 border border-surface-border/70 rounded-xl px-3 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Destination Directory</label>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Local Download Destination</label>
               <div className="flex gap-2">
                 <input
                   type="text"
+                  readOnly
                   value={outputFolder}
-                  onChange={(e) => setOutputFolder(e.target.value)}
-                  className="w-full bg-surface-950 border border-surface-border/70 rounded-xl px-3 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-emerald-500 truncate"
+                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-600 font-mono"
                 />
                 <button
                   type="button"
-                  onClick={handleBrowseFolder}
-                  className="clay-button-secondary px-3 py-2 text-xs shrink-0"
+                  onClick={async () => {
+                    if (window.electronAPI?.openDirectoryDialog) {
+                      const dir = await window.electronAPI.openDirectoryDialog({ title: 'Select Output Folder' });
+                      if (dir) setOutputFolder(dir);
+                    }
+                  }}
+                  className="bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-700 font-semibold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer"
                 >
-                  Browse
+                  Change
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Submit Action */}
-        <div className="flex items-center justify-end gap-4 pt-2">
+        {/* Submit Button */}
+        <div className="flex items-center justify-end gap-3 pt-2">
           <button
             type="submit"
-            disabled={isSubmitting || !selectedFile}
-            className="clay-button-primary px-8 py-3 text-sm font-extrabold flex items-center gap-3 shadow-clayGlowPurple"
+            disabled={!selectedFile || isSubmitting}
+            className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-50 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
           >
-            <span>{isSubmitting ? 'Uploading to Server Node...' : '🚀 Submit & Render on Remote GPU'}</span>
+            {isSubmitting ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                <span>Transmitting to Worker Node...</span>
+              </>
+            ) : (
+              <>
+                <span>🚀 Offload & Render on Dedicated GPU</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </div>
       </form>

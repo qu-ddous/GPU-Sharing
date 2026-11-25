@@ -38,7 +38,7 @@ export const ClientSidebar: React.FC<ClientSidebarProps> = ({ currentView, onNav
   ];
 
   const computeItems: Array<{ id: ClientNavView; label: string; icon: React.ReactNode }> = [
-    { id: 'ai_studio', label: 'AI Studio & Lens', icon: <BrainCircuit className="w-4 h-4" /> },
+    { id: 'ai_studio', label: 'Vision & Deep Learning', icon: <BrainCircuit className="w-4 h-4" /> },
     { id: 'benchmarks', label: 'Benchmarks Suite', icon: <Zap className="w-4 h-4" /> },
   ];
 

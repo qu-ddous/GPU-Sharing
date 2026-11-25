@@ -53,7 +53,7 @@ export const App: React.FC = () => {
       case 'dashboard': return 'GPUShare • Dashboard Overview';
       case 'render_job': return 'GPUShare • Video & Workspace Task Offloading';
       case 'active_job': return 'GPUShare • Live Monitor & Console Stream';
-      case 'ai_studio': return 'GPUShare • AI Training & Google Lens Studio';
+      case 'ai_studio': return 'GPUShare • Deep Learning & Vision Studio';
       case 'benchmarks': return 'GPUShare • Hardware Speedup Benchmark Suite';
       case 'settings': return 'GPUShare • Host Connection & Storage Settings';
       case 'docs': return 'GPUShare • Bilingual Documentation & Manual';
