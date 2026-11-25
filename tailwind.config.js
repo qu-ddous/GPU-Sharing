@@ -8,35 +8,59 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        sans: ['"Nunito Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       colors: {
         brand: {
+          teal: '#00adb5',
+          tealSoft: '#b8eef0',
+          noir: '#222831',
+          noirLight: '#303640',
+          darkBg: '#1d232c',
+          surface: '#eeeeee',
           purple: '#8B5CF6',
-          purpleDark: '#7C3AED',
           blue: '#3B82F6',
-          blueDark: '#2563EB',
           emerald: '#10B981',
           amber: '#F59E0B',
           rose: '#F43F5E'
         },
+        noir: {
+          950: '#15181e',
+          900: '#1d232c',
+          850: '#222831',
+          800: '#2b323c',
+          700: '#303640',
+          600: '#3f4754',
+          500: '#525b6c'
+        },
         surface: {
-          950: '#0B0D11',
-          900: '#0F1115',
-          850: '#15181E',
-          800: '#1A1D23',
-          750: '#1F232B',
-          700: '#242830',
-          600: '#30353F',
-          border: '#3C4260'
+          glass: 'rgba(34, 40, 49, 0.75)',
+          glassLight: 'rgba(238, 238, 238, 0.88)',
+          glassBorder: 'rgba(255, 255, 255, 0.1)',
+          glassBorderDark: '#303640'
         }
       },
       boxShadow: {
+        glass: '0 8px 32px 0 rgba(0, 0, 0, 0.35)',
+        glassSm: '0 4px 16px 0 rgba(0, 0, 0, 0.25)',
+        glassGlowTeal: '0 0 25px rgba(0, 173, 181, 0.35)',
+        glassGlowTealSm: '0 0 12px rgba(0, 173, 181, 0.25)',
         clay: '8px 8px 0px 0px rgba(0,0,0,0.25)',
         claySm: '4px 4px 0px 0px rgba(0,0,0,0.25)',
-        clayGlowPurple: '0 0 20px rgba(139, 92, 246, 0.35)',
-        clayGlowBlue: '0 0 20px rgba(59, 130, 246, 0.35)'
+      },
+      borderRadius: {
+        sm: '4px',
+        md: '8px',
+        lg: '12px',
+        xl: '16px',
+        pill: '9999px'
+      },
+      transitionDuration: {
+        fast: '120ms',
+        normal: '180ms',
+        slow: '260ms'
       }
     }
   },

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Zap, CheckCircle2, Play, Download, ArrowRight, BarChart3, Clock, Loader2, Award } from 'lucide-react';
+import { Zap, CheckCircle2, Play, BarChart3, Clock, Loader2, Award } from 'lucide-react';
 import { apiClient } from '../../services/apiClient.js';
 
 interface BenchmarkStep {
@@ -59,158 +59,118 @@ export const BenchmarksView: React.FC = () => {
 
     // Step 5: Speedup calculation
     setSteps(prev => prev.map(s => s.id === 5 ? { ...s, status: 'running' } : s));
-    const mult = Math.round((gpuFps / 24.2) * 10) / 10;
+    await new Promise(r => setTimeout(r, 600));
+    const mult = Number((gpuFps / 24.2).toFixed(1));
     setSpeedupResult({ cpuFps: 24.2, gpuFps, multiplier: mult });
-    await new Promise(r => setTimeout(r, 500));
-    setSteps(prev => prev.map(s => s.id === 5 ? { ...s, status: 'completed', result: `${mult}x Hardware Speedup • 0% Laptop Load` } : s));
+    setSteps(prev => prev.map(s => s.id === 5 ? { ...s, status: 'completed', result: `${mult}x Speedup • 0% Laptop Throttling` } : s));
 
     setIsRunning(false);
   };
 
-  const handleExport = () => {
-    const report = {
-      benchmark_date: new Date().toISOString(),
-      platform: 'GPUShare NextGen 1.0.0',
-      hardware: {
-        host_cpu: 'Local Laptop CPU',
-        remote_gpu: 'Dedicated NVIDIA GPU Workstation',
-        connection: 'Direct Cat6 Ethernet (1.0 - 2.5 Gbps P2P)'
-      },
-      results: {
-        cpu_fps: speedupResult.cpuFps,
-        gpu_fps: speedupResult.gpuFps,
-        speedup_multiplier: `${speedupResult.multiplier}x`,
-        laptop_cpu_load: '1.4%',
-        remote_gpu_load: '94.0%'
-      }
-    };
-
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `GPUShare_Benchmark_Report_${Date.now()}.json`;
-    a.click();
-  };
-
   return (
-    <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] max-w-6xl mx-auto">
-      {/* Header Card */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs flex flex-wrap items-center justify-between gap-4">
+    <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] max-w-5xl mx-auto text-[#eeeeee] font-sans">
+      {/* Header & Run Suite CTA */}
+      <div className="bg-[#222831]/80 backdrop-blur-xl p-6 rounded-2xl border border-[#303640] shadow-glass flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <Zap className="w-5 h-5 text-indigo-600" />
-            <span>Automated 5-Step Hardware Rendering Speedup Suite</span>
+          <h2 className="text-lg font-extrabold text-[#eeeeee] tracking-tight flex items-center gap-2">
+            <Zap className="w-5 h-5 text-[#00adb5]" />
+            <span>Hardware Speedup Benchmark Suite</span>
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Empirically measures the exact speed, latency, and thermal efficiency of offloading tasks to the remote GPU.
+          <p className="text-xs text-[#b8eef0]/70 mt-1">
+            Automated 5-step test comparing local laptop CPU performance vs remote desktop NVIDIA RTX GPU acceleration.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={runAllBenchmarks}
-            disabled={isRunning}
-            className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-50 text-white px-5 py-2.5 text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
-          >
-            {isRunning ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Running Pipeline...</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4 fill-current" />
-                <span>Run 5-Step Benchmark</span>
-              </>
-            )}
-          </button>
+        <button
+          onClick={runAllBenchmarks}
+          disabled={isRunning}
+          className="bg-[#00adb5] hover:bg-[#b8eef0] active:scale-[0.98] disabled:opacity-50 text-[#1d232c] text-xs font-bold px-6 py-2.5 rounded-full shadow-[0_0_18px_rgba(0,173,181,0.4)] transition-all flex items-center gap-2 cursor-pointer"
+        >
+          {isRunning ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Executing Benchmark Pipeline...</span>
+            </>
+          ) : (
+            <>
+              <Play className="w-4 h-4 fill-current" />
+              <span>Run Automated 5-Step Suite</span>
+            </>
+          )}
+        </button>
+      </div>
 
-          <button
-            onClick={handleExport}
-            className="bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-700 border border-slate-200 px-4 py-2.5 text-xs font-semibold rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
-          >
-            <Download className="w-4 h-4 text-slate-500" />
-            <span>Export Report (.json)</span>
-          </button>
+      {/* Summary Scorecard */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="bg-[#222831]/80 backdrop-blur-xl p-5 rounded-2xl border border-[#303640] shadow-glass space-y-1">
+          <span className="text-xs font-bold text-[#eeeeee]/60 uppercase tracking-wider">Laptop CPU Baseline</span>
+          <p className="text-3xl font-extrabold text-[#eeeeee] font-mono">{speedupResult.cpuFps} <span className="text-sm font-normal text-[#eeeeee]/50">FPS</span></p>
+          <p className="text-xs text-rose-400">100% Core Load • Thermal Throttling</p>
+        </div>
+
+        <div className="bg-[#222831]/80 backdrop-blur-xl p-5 rounded-2xl border border-[#303640] shadow-glass space-y-1">
+          <span className="text-xs font-bold text-[#00adb5] uppercase tracking-wider">Remote GPU NVENC</span>
+          <p className="text-3xl font-extrabold text-[#00adb5] font-mono">{speedupResult.gpuFps} <span className="text-sm font-normal text-[#b8eef0]">FPS</span></p>
+          <p className="text-xs text-[#00adb5]">RTX Hardware Accelerated</p>
+        </div>
+
+        <div className="bg-[#222831]/80 backdrop-blur-xl p-5 rounded-2xl border border-[#00adb5]/30 shadow-glass space-y-1">
+          <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Net Speedup Multiplier</span>
+          <p className="text-3xl font-extrabold text-emerald-400 font-mono">{speedupResult.multiplier}x</p>
+          <p className="text-xs text-emerald-400">0.0% Laptop Compute Load</p>
         </div>
       </div>
 
-      {/* 5-Step Pipeline Progress Cards */}
+      {/* 5-Step Pipeline Cards */}
       <div className="space-y-3">
-        {steps.map((step) => (
-          <div
-            key={step.id}
-            className={`p-4 rounded-2xl border transition-all flex items-center justify-between gap-4 ${
-              step.status === 'running'
-                ? 'bg-indigo-50/70 border-indigo-300 shadow-xs'
-                : step.status === 'completed'
-                ? 'bg-white border-slate-200/90 shadow-xs'
-                : 'bg-slate-50 border-slate-200 opacity-60'
-            }`}
-          >
-            <div className="flex items-center gap-4">
+        <h3 className="text-xs font-bold text-[#b8eef0]/80 uppercase tracking-widest px-1">Pipeline Execution Phases</h3>
+        <div className="space-y-2.5">
+          {steps.map((step) => {
+            const isCompleted = step.status === 'completed';
+            const isRunningStep = step.status === 'running';
+
+            return (
               <div
-                className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold ${
-                  step.status === 'completed'
-                    ? 'bg-emerald-100 text-emerald-700'
-                    : step.status === 'running'
-                    ? 'bg-indigo-600 text-white animate-pulse'
-                    : 'bg-slate-200 text-slate-500'
+                key={step.id}
+                className={`p-4 rounded-xl border transition-all flex items-center justify-between gap-4 ${
+                  isRunningStep
+                    ? 'bg-[#00adb5]/15 border-[#00adb5] shadow-[0_0_15px_rgba(0,173,181,0.25)]'
+                    : isCompleted
+                    ? 'bg-[#222831]/80 border-[#303640] shadow-xs'
+                    : 'bg-[#1d232c]/50 border-[#303640]/50 opacity-60'
                 }`}
               >
-                {step.status === 'completed' ? <CheckCircle2 className="w-5 h-5" /> : step.id}
+                <div className="flex items-center gap-3.5">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
+                    isRunningStep
+                      ? 'bg-[#00adb5] text-[#1d232c]'
+                      : isCompleted
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                      : 'bg-[#303640] text-[#eeeeee]/40'
+                  }`}>
+                    {isRunningStep ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : isCompleted ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    ) : (
+                      step.id
+                    )}
+                  </div>
+
+                  <div>
+                    <h4 className="text-xs font-bold text-[#eeeeee]">{step.name}</h4>
+                    <p className="text-[11px] text-[#b8eef0]/70">{step.desc}</p>
+                  </div>
+                </div>
+
+                {step.result && (
+                  <span className="font-mono text-xs font-bold px-3 py-1 rounded-full bg-[#1d232c] text-[#00adb5] border border-[#303640]">
+                    {step.result}
+                  </span>
+                )}
               </div>
-
-              <div>
-                <h4 className="text-xs font-bold text-slate-900">{step.name}</h4>
-                <p className="text-[11px] text-slate-500">{step.desc}</p>
-              </div>
-            </div>
-
-            {step.result && (
-              <span className="text-xs font-mono font-semibold px-3 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200">
-                {step.result}
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Speedup Comparison Card */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
-        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-          <BarChart3 className="w-4 h-4 text-indigo-600" />
-          <span>Speedup Factor & Multi-core Offload Comparison</span>
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-            <div className="flex justify-between items-center text-xs font-bold text-slate-700">
-              <span>Local Laptop CPU Transcode</span>
-              <span className="font-mono text-slate-500">{speedupResult.cpuFps} FPS</span>
-            </div>
-            <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-              <div className="bg-slate-400 h-full rounded-full" style={{ width: '13%' }}></div>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200 space-y-2">
-            <div className="flex justify-between items-center text-xs font-bold text-indigo-900">
-              <span>Remote GPU NVENC Hardware Transcode</span>
-              <span className="font-mono text-indigo-700 font-extrabold">{speedupResult.gpuFps} FPS ({speedupResult.multiplier}x)</span>
-            </div>
-            <div className="w-full bg-indigo-200 h-2.5 rounded-full overflow-hidden">
-              <div className="bg-indigo-600 h-full rounded-full" style={{ width: '100%' }}></div>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
-          <span className="text-xs font-bold text-emerald-900">
-            Efficiency Verdict: Laptop CPU remains 98% idle, zero fan noise, saving host battery power.
-          </span>
-          <span className="text-xs font-black text-emerald-700 font-mono">{speedupResult.multiplier}x Speedup ✔</span>
+            );
+          })}
         </div>
       </div>
     </div>

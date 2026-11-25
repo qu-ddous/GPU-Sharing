@@ -49,7 +49,7 @@ export const ClientSidebar: React.FC<ClientSidebarProps> = ({ currentView, onNav
 
   const renderNavGroup = (title: string, items: typeof workflowItems) => (
     <div>
-      <p className="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+      <p className="px-3 text-[10px] font-bold text-[#b8eef0]/60 uppercase tracking-widest mb-1.5 font-sans">
         {title}
       </p>
       <div className="space-y-1">
@@ -59,13 +59,15 @@ export const ClientSidebar: React.FC<ClientSidebarProps> = ({ currentView, onNav
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all ${
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-180 select-none ${
                 isActive
-                  ? 'bg-purple-50 text-purple-700 border border-purple-200 font-bold shadow-xs'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
+                  ? 'bg-[#00adb5] text-[#1d232c] font-bold shadow-[0_0_18px_rgba(0,173,181,0.45)] border border-[#b8eef0]/50 translate-x-0.5'
+                  : 'text-[#eeeeee]/80 hover:bg-[#303640]/60 hover:text-[#00adb5] border border-transparent'
               }`}
             >
-              {item.icon}
+              <span className={isActive ? 'text-[#1d232c]' : 'text-[#00adb5]'}>
+                {item.icon}
+              </span>
               <span>{item.label}</span>
             </button>
           );
@@ -75,59 +77,62 @@ export const ClientSidebar: React.FC<ClientSidebarProps> = ({ currentView, onNav
   );
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 h-screen select-none shrink-0 shadow-xs">
+    <aside className="w-64 bg-[#222831]/95 backdrop-blur-2xl border-r border-[#303640] flex flex-col justify-between p-4 h-screen select-none shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.35)] relative z-20">
       <div className="space-y-5 overflow-y-auto pr-1">
         {/* Brand Header - Pure Client Studio */}
         <div className="px-2 pt-1">
-          <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-purple-50 border border-purple-200 text-purple-700 text-[10px] font-bold tracking-wider mb-1.5">
-            💻 CLIENT STUDIO
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#00adb5]/15 border border-[#00adb5]/30 text-[#00adb5] text-[10px] font-bold tracking-widest mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00adb5] animate-ping" />
+            CLIENT STUDIO
           </div>
-          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
-            <span className="text-purple-600 text-2xl leading-none">⚡</span> GPUShare
+          <h1 className="text-xl font-extrabold text-[#eeeeee] tracking-tight flex items-center gap-2">
+            <span className="text-[#00adb5] text-2xl drop-shadow-[0_0_12px_rgba(0,173,181,0.6)]">⚡</span> GPUShare
           </h1>
-          <p className="text-xs text-slate-500 font-medium mt-0.5">Remote GPU Task Offloader</p>
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-100">
+          <p className="text-xs text-[#b8eef0]/70 font-medium mt-0.5">Remote GPU Compute & Render</p>
+          
+          {/* Connection Indicator Pill */}
+          <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-[#303640]/80">
             <span
               className={`w-2 h-2 rounded-full ${
-                isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+                isConnected ? 'bg-[#00adb5] shadow-[0_0_10px_#00adb5] animate-pulse' : 'bg-red-400'
               }`}
             />
-            <span className="text-[11px] font-medium text-slate-600 truncate">
-              {isConnected ? `Worker: ${serverIp}:${serverPort}` : 'Worker Offline'}
+            <span className="text-[11px] font-mono font-medium text-[#eeeeee]/80 truncate">
+              {isConnected ? `Host: ${serverIp}:${serverPort}` : 'Worker Server Offline'}
             </span>
           </div>
         </div>
 
-        {/* Pure Client Navigation Groups (Only 7 Client Views) */}
+        {/* Client Navigation Groups */}
         <nav className="space-y-4">
-          {renderNavGroup('Main Workflow', workflowItems)}
-          {renderNavGroup('Compute & AI', computeItems)}
-          {renderNavGroup('System & Preferences', systemItems)}
+          {renderNavGroup('Workflows', workflowItems)}
+          {renderNavGroup('Compute & Intelligence', computeItems)}
+          {renderNavGroup('Configuration', systemItems)}
         </nav>
       </div>
 
-      {/* Engine Status Card at Bottom */}
-      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+      {/* Engine Status Capsule at Bottom */}
+      <div className="p-3 rounded-xl bg-[#1d232c]/85 border border-[#303640] backdrop-blur-md shadow-inner">
         <div className="flex items-center gap-2.5">
           <div className="relative flex h-2.5 w-2.5">
             {nvencReady && (
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00adb5] opacity-75"></span>
             )}
             <span
               className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                nvencReady ? 'bg-emerald-500' : 'bg-amber-500'
+                nvencReady ? 'bg-[#00adb5] shadow-[0_0_8px_#00adb5]' : 'bg-amber-400'
               }`}
             ></span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-slate-800 truncate">
-              {nvencReady ? '● Remote NVENC Ready' : '● CPU Fallback'}
+            <p className="text-xs font-bold text-[#eeeeee] truncate">
+              {nvencReady ? 'Remote NVENC Ready' : 'CPU Compute Fallback'}
             </p>
-            <p className="text-[10px] text-slate-500 font-mono truncate">
-              {nvencReady ? 'h264_nvenc Accelerated' : 'libx264 Multi-Core'}
+            <p className="text-[10px] text-[#b8eef0]/70 font-mono truncate">
+              {nvencReady ? 'Hardware Acceleration' : 'Multi-Core libx264'}
             </p>
           </div>
-          <Cpu className="w-4 h-4 text-slate-400" />
+          <Cpu className="w-4 h-4 text-[#00adb5]" />
         </div>
       </div>
     </aside>
