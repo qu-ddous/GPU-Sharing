@@ -23,90 +23,102 @@ interface ServerState {
   setIsScanning: (scanning: boolean) => void;
 }
 
-const defaultHardware: HardwareInfo = {
-  hostname: 'DESKTOP-GPU',
-  os_platform: 'Windows 11 (Direct Cat6 LAN)',
-  cpu_model: 'AMD Ryzen 7 5800X (8C/16T)',
-  cpu_cores: 16,
-  cpu_percent: 14,
-  ram_total_gb: 32.0,
-  ram_used_gb: 14.2,
-  gpu_detected: true,
-  gpu_name: 'NVIDIA GeForce RTX 3060 (12GB GDDR6)',
-  gpu_vram_total_mb: 12288,
-  gpu_vram_used_mb: 4200,
-  gpu_util_percent: 88,
-  gpu_temp_c: 62,
-  encoder_util_percent: 74,
+const emptyHardware: HardwareInfo = {
+  hostname: 'Not Connected',
+  os_platform: 'Awaiting Connection',
+  cpu_model: 'Host Processor',
+  cpu_cores: 0,
+  cpu_percent: 0,
+  ram_total_gb: 0,
+  ram_used_gb: 0,
+  gpu_detected: false,
+  gpu_name: 'No GPU Detected',
+  gpu_vram_total_mb: 0,
+  gpu_vram_used_mb: 0,
+  gpu_util_percent: 0,
+  gpu_temp_c: 0,
+  encoder_util_percent: 0,
 };
+
+let healthPollInterval: any = null;
 
 export const useServerStore = create<ServerState>((set, get) => ({
   serverIp: '192.168.99.1',
   serverPort: 8000,
   apiToken: '',
-  isConnected: true, // Default connected for zero-latency demo / local dev
-  latencyMs: 1.2,
-  nvencReady: true,
-  hardware: defaultHardware,
+  isConnected: false,
+  latencyMs: 0,
+  nvencReady: false,
+  hardware: emptyHardware,
   isScanning: false,
-  lastPingTime: Date.now(),
+  lastPingTime: 0,
 
-  setServerIp: (ip) => {
+  setServerIp: (ip: string) => {
     set({ serverIp: ip });
     apiClient.setBaseURL(`http://${ip}:${get().serverPort}`);
     wsClient.setServerUrl(`http://${ip}:${get().serverPort}`);
   },
 
-  setServerPort: (port) => {
+  setServerPort: (port: number) => {
     set({ serverPort: port });
     apiClient.setBaseURL(`http://${get().serverIp}:${port}`);
     wsClient.setServerUrl(`http://${get().serverIp}:${port}`);
   },
 
-  setApiToken: (token) => {
+  setApiToken: (token: string) => {
     set({ apiToken: token });
     apiClient.setToken(token);
   },
 
-  connect: async (ip, port) => {
+  connect: async (ip?: string, port?: number) => {
     const targetIp = ip || get().serverIp;
     const targetPort = port || get().serverPort;
-    const url = `http://${targetIp}:${targetPort}`;
-    apiClient.setBaseURL(url);
-    wsClient.setServerUrl(url);
 
-    try {
-      const ping = await apiClient.ping();
-      if (ping.pong) {
-        set({ isConnected: true, latencyMs: ping.latency, lastPingTime: Date.now() });
-        await get().fetchHealth();
-        return true;
-      } else {
-        // Fallback for simulation / mock offline toggle
-        set({ isConnected: true, latencyMs: 1.2, lastPingTime: Date.now() });
-        return true;
-      }
-    } catch {
-      set({ isConnected: false, latencyMs: 999 });
+    apiClient.setBaseURL(`http://${targetIp}:${targetPort}`);
+    wsClient.setServerUrl(`http://${targetIp}:${targetPort}`);
+
+    const res = await apiClient.ping();
+
+    if (res.pong) {
+      set({ isConnected: true, latencyMs: res.latency, serverIp: targetIp, serverPort: targetPort });
+      await get().fetchHealth();
+
+      // Poll real health every 3 seconds
+      if (healthPollInterval) clearInterval(healthPollInterval);
+      healthPollInterval = setInterval(() => {
+        if (get().isConnected) {
+          get().fetchHealth();
+        }
+      }, 3000);
+
+      return true;
+    } else {
+      set({ isConnected: false, latencyMs: 0 });
       return false;
     }
   },
 
   disconnect: () => {
-    set({ isConnected: false, latencyMs: 999 });
+    if (healthPollInterval) {
+      clearInterval(healthPollInterval);
+      healthPollInterval = null;
+    }
+    set({ isConnected: false, hardware: emptyHardware });
   },
 
   fetchHealth: async () => {
     try {
       const data: HealthResponse = await apiClient.getHealth();
       set({
-        hardware: data.hardware || defaultHardware,
-        nvencReady: data.ffmpeg?.nvenc_available ?? true,
+        isConnected: true,
+        nvencReady: data.ffmpeg?.nvenc_available ?? false,
+        hardware: data.hardware,
+        lastPingTime: Date.now()
       });
     } catch {
-      // Keep robust defaults
+      set({ isConnected: false });
     }
   },
 
-  setIsScanning: (scanning) => set({ isScanning: scanning }),
+  setIsScanning: (scanning: boolean) => set({ isScanning: scanning })
 }));

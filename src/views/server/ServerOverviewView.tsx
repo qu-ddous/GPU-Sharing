@@ -1,193 +1,182 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
-import { SparklineWave } from '../../components/server/SparklineWave.js';
 import { 
   Cpu, 
-  Layers, 
+  HardDrive, 
+  Activity, 
   Thermometer, 
   Network, 
-  Clock, 
-  Zap, 
-  HardDrive, 
-  CheckCircle2, 
-  AlertTriangle,
-  ArrowUpRight
+  Copy, 
+  Check, 
+  Users, 
+  Radio,
+  Server
 } from 'lucide-react';
 
 export const ServerOverviewView: React.FC = () => {
   const {
     workerIp,
     workerPort,
+    daemonOnline,
+    activeClientCount,
     totalTransferredDisplay,
-    averageFps,
-    renderQueue,
-    eventLogs
+    activeSessions,
+    cpuPercent,
+    ramUsedGb,
+    ramTotalGb,
+    gpuName,
+    gpuUtilPercent,
+    vramUsedMb,
+    vramTotalMb,
+    gpuTempC,
+    updateHardwareStats
   } = useServerNodeStore();
 
-  const completedJobs = renderQueue.filter(j => j.status === 'completed').length;
-  const processingJobs = renderQueue.filter(j => j.status === 'rendering').length;
+  // Poll real hardware stats from local FastAPI daemon
+  useEffect(() => {
+    let isMounted = true;
+    const fetchRealTelemetry = async () => {
+      try {
+        const res = await fetch(`http://127.0.0.1:${workerPort}/api/v1/health`);
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data.hardware) {
+            updateHardwareStats(data.hardware);
+          }
+        }
+      } catch {
+        // Server daemon is starting or not yet launched
+      }
+    };
+
+    fetchRealTelemetry();
+    const interval = setInterval(fetchRealTelemetry, 2000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [workerPort, updateHardwareStats]);
 
   return (
-    <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)]">
-      {/* 5 Core Telemetry Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        {/* GPU Utilization Card */}
-        <div className="clay-card p-4 space-y-2.5">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
-            <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-brand-blue" /> GPU Utilization</span>
-            <span className="text-[10px] text-brand-blue font-bold font-mono">NVENC</span>
+    <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] max-w-6xl mx-auto">
+      {/* 4 Real Hardware KPI Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* CPU Util Card */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider">Host CPU Load</span>
+            <Cpu className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-white font-mono tracking-tight">88%</span>
-            <span className="text-[11px] text-slate-400 font-medium">RTX 3060 12GB</span>
-          </div>
-          <div className="w-full bg-surface-950 h-2 rounded-full overflow-hidden">
-            <div className="bg-brand-blue h-full rounded-full transition-all duration-300" style={{ width: '88%' }} />
-          </div>
-        </div>
-
-        {/* GPU VRAM Usage Card */}
-        <div className="clay-card p-4 space-y-2.5">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
-            <span className="flex items-center gap-1.5"><HardDrive className="w-3.5 h-3.5 text-emerald-400" /> GPU VRAM</span>
-            <span className="text-[10px] text-emerald-400 font-bold font-mono">35% Used</span>
-          </div>
-          <div className="flex items-baseline justify-between">
-            <span className="text-2xl font-extrabold text-white font-mono tracking-tight">4.2 / 12 GB</span>
-            <span className="text-[11px] text-slate-400 font-medium">GDDR6</span>
-          </div>
-          <div className="w-full bg-surface-950 h-2 rounded-full overflow-hidden">
-            <div className="bg-emerald-500 h-full rounded-full transition-all duration-300" style={{ width: '35%' }} />
-          </div>
-        </div>
-
-        {/* GPU Temperature Card */}
-        <div className="clay-card p-4 space-y-2.5">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
-            <span className="flex items-center gap-1.5"><Thermometer className="w-3.5 h-3.5 text-amber-400" /> GPU Thermals</span>
-            <span className="text-[10px] text-emerald-400 font-bold">Normal</span>
-          </div>
-          <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-white font-mono tracking-tight">62 °C</span>
-            <span className="text-[11px] text-slate-400 font-medium">Fan: 52%</span>
-          </div>
-          <div className="w-full bg-surface-950 h-2 rounded-full overflow-hidden">
-            <div className="bg-amber-500 h-full rounded-full transition-all duration-300" style={{ width: '62%' }} />
-          </div>
-        </div>
-
-        {/* CPU Usage Card */}
-        <div className="clay-card p-4 space-y-2.5">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
-            <span className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-purple-400" /> CPU Usage</span>
-            <span className="text-[10px] text-purple-400 font-bold">16 Threads</span>
-          </div>
-          <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-white font-mono tracking-tight">14%</span>
-            <span className="text-[11px] text-slate-400 font-medium">Ryzen 7 5800X</span>
-          </div>
-          <div className="w-full bg-surface-950 h-2 rounded-full overflow-hidden">
-            <div className="bg-brand-purple h-full rounded-full transition-all duration-300" style={{ width: '14%' }} />
-          </div>
-        </div>
-
-        {/* Network Worker Node Card */}
-        <div className="clay-card p-4 space-y-2.5">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
-            <span className="flex items-center gap-1.5"><Network className="w-3.5 h-3.5 text-brand-blue" /> Daemon Service</span>
-            <span className="text-[10px] text-emerald-400 font-bold">Port 8000</span>
-          </div>
-          <div className="flex items-baseline justify-between">
-            <span className="text-base font-extrabold text-white font-mono truncate">{workerIp}</span>
-          </div>
-          <p className="text-[11px] text-emerald-400 font-mono">FastAPI Listening</p>
-        </div>
-      </div>
-
-      {/* Middle Row: Real-Time Dynamic Sparkline Waveforms & Session Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="clay-card p-6 lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-              Real-Time Hardware Waveforms (60-Second Window)
-            </h3>
-            <span className="text-xs text-slate-400 font-mono">60 FPS Canvas Stream</span>
-          </div>
-
-          <div className="space-y-4">
-            <SparklineWave
-              label="GPU Core Utilization (CUDA / NVENC Compute)"
-              color="#3B82F6"
-              fillColor="rgba(59, 130, 246, 0.18)"
-              height={80}
-            />
-
-            <SparklineWave
-              label="GPU VRAM Memory Allocation"
-              color="#10B981"
-              fillColor="rgba(16, 185, 129, 0.18)"
-              height={70}
-            />
-          </div>
-        </div>
-
-        {/* Session Summary Stats */}
-        <div className="clay-card p-6 space-y-5">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">Worker Session Totals</h3>
-          
-          <div className="space-y-3 font-mono text-xs">
-            <div className="p-3 rounded-xl bg-surface-800/60 border border-surface-border/50 flex justify-between items-center">
-              <span className="text-slate-400">Total Jobs Rendered</span>
-              <span className="text-base font-extrabold text-white">{completedJobs + 19}</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-surface-800/60 border border-surface-border/50 flex justify-between items-center">
-              <span className="text-slate-400">Data Transferred</span>
-              <span className="text-base font-extrabold text-emerald-400">{totalTransferredDisplay}</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-surface-800/60 border border-surface-border/50 flex justify-between items-center">
-              <span className="text-slate-400">Average Transcode Speed</span>
-              <span className="text-base font-extrabold text-brand-blue">{averageFps} FPS</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-surface-800/60 border border-surface-border/50 flex justify-between items-center">
-              <span className="text-slate-400">Direct Link Bandwidth</span>
-              <span className="text-base font-extrabold text-amber-400">1.0 Gbps Cat6</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Row: Recent Activity Quick Feed */}
-      <div className="clay-card p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">Worker Subsystem Event Logs</h3>
-          <span className="text-xs text-slate-400 font-mono">Zero UI Lag Virtualization</span>
-        </div>
-
-        <div className="space-y-2">
-          {eventLogs.slice(0, 5).map((evt) => (
+          <p className="text-2xl font-extrabold text-slate-900 font-mono">
+            {cpuPercent.toFixed(1)}%
+          </p>
+          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-2">
             <div
-              key={evt.id}
-              className="p-3 rounded-xl bg-surface-850/60 border border-surface-border/40 flex items-center justify-between gap-3 text-xs font-mono"
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-slate-500">[{evt.timestamp}]</span>
-                <span className={`clay-badge uppercase font-bold text-[10px] ${
-                  evt.level === 'SUCCESS' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' :
-                  evt.level === 'WARNING' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' :
-                  evt.level === 'ERROR' ? 'bg-rose-500/10 border-rose-500/30 text-rose-400' :
-                  'bg-brand-blue/10 border-brand-blue/30 text-brand-blue'
-                }`}>
-                  {evt.level}
-                </span>
-                <span className="text-slate-300 font-bold">{evt.source}</span>
-                <span className="text-slate-200">{evt.message}</span>
-              </div>
-            </div>
-          ))}
+              className="bg-indigo-600 h-full rounded-full transition-all duration-300"
+              style={{ width: `${Math.min(100, Math.max(0, cpuPercent))}%` }}
+            ></div>
+          </div>
         </div>
+
+        {/* RAM Card */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider">System RAM</span>
+            <HardDrive className="w-4 h-4 text-emerald-600" />
+          </div>
+          <p className="text-2xl font-extrabold text-slate-900 font-mono">
+            {ramUsedGb} <span className="text-sm font-normal text-slate-500">/ {ramTotalGb || 16} GB</span>
+          </p>
+          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-2">
+            <div
+              className="bg-emerald-500 h-full rounded-full transition-all duration-300"
+              style={{ width: `${ramTotalGb > 0 ? (ramUsedGb / ramTotalGb) * 100 : 0}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* GPU / Compute Card */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider">GPU Compute</span>
+            <Activity className="w-4 h-4 text-amber-600" />
+          </div>
+          <p className="text-2xl font-extrabold text-slate-900 font-mono">
+            {gpuUtilPercent > 0 ? `${gpuUtilPercent.toFixed(0)}%` : '0% (Idle)'}
+          </p>
+          <p className="text-[11px] text-slate-500 truncate">{gpuName}</p>
+        </div>
+
+        {/* VRAM / Hardware Temp Card */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider">GPU VRAM</span>
+            <Thermometer className="w-4 h-4 text-rose-500" />
+          </div>
+          <p className="text-2xl font-extrabold text-slate-900 font-mono">
+            {vramTotalMb > 0 ? `${vramUsedMb} MB` : '0 MB'}
+          </p>
+          <p className="text-[11px] text-slate-500">
+            {gpuTempC > 0 ? `Thermal: ${gpuTempC}°C` : 'Optimal Temperature'}
+          </p>
+        </div>
+      </div>
+
+      {/* Network & Worker Status Card */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+              <Network className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-900">Direct Ethernet LAN Status</h3>
+              <p className="text-xs text-slate-500">Listening on 0.0.0.0:{workerPort} • Auto-Discovery UDP Port 8002</p>
+            </div>
+          </div>
+
+          <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Worker IP: {workerIp}</span>
+          </span>
+        </div>
+
+        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-2">
+          <p className="font-semibold text-slate-800">
+            📌 Connect your laptop client:
+          </p>
+          <p>
+            Plug an Ethernet cable from this desktop PC into your laptop. On your laptop, open <strong>GPUShare-Client.exe</strong> and click <strong>"Scan LAN"</strong>, or enter <code>{workerIp}:{workerPort}</code> to start offloading video and compute tasks with 0% load on the laptop.
+          </p>
+        </div>
+      </div>
+
+      {/* Connected Clients Card */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+          <Users className="w-4 h-4 text-indigo-600" />
+          <span>Active Connected Laptop Clients</span>
+        </h3>
+
+        {activeSessions.length === 0 ? (
+          <div className="p-8 text-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50 space-y-2">
+            <Radio className="w-8 h-8 text-slate-400 mx-auto" />
+            <p className="text-xs font-bold text-slate-700">Awaiting Client Connection</p>
+            <p className="text-[11px] text-slate-500">
+              When a laptop client connects over the Ethernet cable, its session IP, latency, and data transfer will appear here.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {activeSessions.map((sess, idx) => (
+              <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs font-mono">
+                <span className="font-bold text-slate-800">{sess.ip}:{sess.port}</span>
+                <span className="text-emerald-600 font-semibold">{sess.status} • {sess.latency}</span>
+                <span className="text-slate-500">{sess.duration}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

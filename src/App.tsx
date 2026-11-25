@@ -13,14 +13,10 @@ import { BenchmarksView } from './views/client/BenchmarksView.js';
 import { SettingsView } from './views/client/SettingsView.js';
 import { DocsView } from './views/client/DocsView.js';
 
-// Server Views (7 Views)
+// Server Views (3 Essential Streamlined Views)
 import { ServerOverviewView } from './views/server/ServerOverviewView.js';
 import { ServerRenderQueueView } from './views/server/ServerRenderQueueView.js';
-import { ServerGPUEngineView } from './views/server/ServerGPUEngineView.js';
-import { ServerNetworkView } from './views/server/ServerNetworkView.js';
-import { ServerSettingsView } from './views/server/ServerSettingsView.js';
 import { ServerActivityLogsView } from './views/server/ServerActivityLogsView.js';
-import { ServerDocsView } from './views/server/ServerDocsView.js';
 
 export const App: React.FC = () => {
   const [appMode, setAppMode] = useState<'client' | 'server'>('client');
@@ -66,20 +62,16 @@ export const App: React.FC = () => {
   // -------------------------------------------------------------
   if (appMode === 'server') {
     return (
-      <div className="flex h-screen w-screen overflow-hidden bg-slate-900 font-sans text-slate-100">
+      <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans text-slate-800">
         <ServerSidebar currentView={serverView} onNavigate={setServerView} />
 
-        <main className="flex-1 flex flex-col min-w-0 bg-slate-900">
+        <main className="flex-1 flex flex-col min-w-0 bg-slate-50">
           <ServerTopbar />
 
           <div className="flex-1 overflow-hidden">
             {serverView === 'server_overview' && <ServerOverviewView />}
             {serverView === 'render_queue' && <ServerRenderQueueView />}
-            {serverView === 'gpu_engine' && <ServerGPUEngineView />}
-            {serverView === 'network' && <ServerNetworkView />}
-            {serverView === 'server_settings' && <ServerSettingsView />}
             {serverView === 'activity_logs' && <ServerActivityLogsView />}
-            {serverView === 'server_docs' && <ServerDocsView />}
           </div>
         </main>
       </div>
