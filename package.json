@@ -13,6 +13,11 @@
     "start": "electron .",
     "package": "npm run build:all && electron-builder --win --config.productName=\"GPUShare\" --config.win.executableName=\"GPUShare\"",
     "pack": "npm run build:all && electron-builder --win --dir --config.productName=\"GPUShare\" --config.win.executableName=\"GPUShare\"",
+    "dist:client": "npm run build:all && electron-builder --win --dir --config.directories.output=\"dist-release/client\" --config.productName=\"GPUShare-Client\" --config.win.executableName=\"GPUShare-Client\"",
+    "dist:server": "npm run build:all && electron-builder --win --dir --config.directories.output=\"dist-release/server\" --config.productName=\"GPUShare-Server\" --config.win.executableName=\"GPUShare-Server\"",
+    "dist:client:exe": "npm run build:all && electron-builder --win --config.directories.output=\"dist-release/client\" --config.productName=\"GPUShare-Client\" --config.win.executableName=\"GPUShare-Client\"",
+    "dist:server:exe": "npm run build:all && electron-builder --win --config.directories.output=\"dist-release/server\" --config.productName=\"GPUShare-Server\" --config.win.executableName=\"GPUShare-Server\"",
+    "dist:all": "npm run dist:client && npm run dist:server",
     "server:daemon": "python -m uvicorn server.app.main:app --host 0.0.0.0 --port 8000 --reload"
   },
   "build": {
