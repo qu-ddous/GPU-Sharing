@@ -1,0 +1,170 @@
+{
+  "en": {
+    "title": "System Documentation & User Manual",
+    "subtitle": "Complete guide for GPUShare Client Studio & Worker Server Node",
+    "sections": [
+      {
+        "id": "overview",
+        "title": "1. Why was this project built?",
+        "summary": "GPUShare solves laptop overheating, thermal throttling, and battery drainage by offloading intensive video rendering and AI workloads to a dedicated desktop GPU over direct LAN cable.",
+        "points": [
+          "Zero Cloud Cost: 100% peer-to-peer over local Cat6 Ethernet (1-2.5 Gbps) with zero internet needed.",
+          "Laptop Remains Cold: Client CPU load stays below 3% while heavy 4K encoding and 100k-tensor training execute on remote RTX GPU.",
+          "Full Telemetry: Live WebSocket streaming of GPU core load, VRAM, thermals, and standard output logs.",
+          "Automatic Fallback: If NVENC hardware encoding ever encounters driver limits, automatic multi-core CPU (libx264) fallback guarantees completed deliveries."
+        ]
+      },
+      {
+        "id": "tasks",
+        "title": "2. 5 Task Workflows (Detailed Guide)",
+        "summary": "Step-by-step breakdown of Video Transcode, Batch Script, Universal Folder, AI Training, and Visual Inference.",
+        "points": [
+          "Video Transcode (GPU): Drag video file -> select resolution (Original/4K/1080p), bitrate & NVENC preset (P1-P7) -> Click Submit.",
+          "Batch / Shell Script: Submit shell or batch script with custom arguments to execute on high-power workstation.",
+          "All-in-One (Project Zip): Compress complete project directory with `cmd:` entrypoint; worker extracts, runs isolated container, and returns `output.zip`.",
+          "Remote CNN Training: Train ResNet18-Lite or MobileNetV2 with live loss/accuracy curves and CUDA speedup.",
+          "Google Lens Visual Classifier: Scan photos using server-side PyTorch vision model with <25ms remote latency."
+        ]
+      },
+      {
+        "id": "verification",
+        "title": "3. Task Manager 100% Resource Verification",
+        "summary": "How to verify that real computing is truly offloaded to the desktop workstation.",
+        "points": [
+          "Open Windows Task Manager on Laptop (Client): Performance tab shows CPU at 1-3%, GPU at 0%.",
+          "Open Windows Task Manager on Desktop (Server): Performance tab shows 'Video Encode' or '3D/CUDA' peaking at 80-99%.",
+          "Network Tab: Demonstrates high-speed Ethernet burst (500-900 Mbps) during transfer, dropping to 0 once rendering starts.",
+          "Checksum Verification: Both client and server calculate SHA-256 before transmission and after reception to verify bit-exact fidelity."
+        ]
+      },
+      {
+        "id": "ai_training",
+        "title": "4. GPUShare AI Training & Google Lens",
+        "summary": "High-throughput deep learning and low-latency computer vision offloading.",
+        "points": [
+          "100,000 Dataset Stream: Built-in synthetic high-throughput tensor stream tests maximum CUDA memory bandwidth.",
+          "Duplex Telemetry: Loss, Accuracy %, processing speed (images/second), and allocated VRAM update every epoch.",
+          "Interactive Google Lens: Drag any image or select quick sample chips (Cat, Car, Dog, Airplane) for instant classification.",
+          "CPU vs GPU Benchmark: Automatically compares host CPU vs remote GPU execution time and reports speedup multiplier."
+        ]
+      },
+      {
+        "id": "cable_pairing",
+        "title": "5. Direct Cable Pairing & Static IP Setup",
+        "summary": "Plug-and-play Ethernet pairing without needing a home router or switch.",
+        "points": [
+          "Connect standard Cat5e/Cat6/Cat7 Ethernet cable directly between laptop and desktop ports.",
+          "Static IP Option: Set Desktop (Server) to 192.168.99.1 (Mask: 255.255.255.0) and Laptop (Client) to 192.168.99.2.",
+          "Automatic APIPA Option: Windows automatically assigns 169.254.x.x addresses within 10 seconds of cable connection.",
+          "Auto-Discovery: Click 'Auto-Discover UDP' in Client Studio; UDP broadcast on port 8002 detects worker host within 1.5 seconds."
+        ]
+      },
+      {
+        "id": "ui_manual",
+        "title": "6. UI Page-by-Page Manual",
+        "summary": "Visual overview of all 7 Client Studio views and 7 Server Node views.",
+        "points": [
+          "Client Dashboard: Hardware gauges, quick connect bar, active connection pill, and recent activity log.",
+          "Client Live Monitor: Dual progress bars, streaming xterm-style console, real-time FPS, and task abort button.",
+          "Server Overview: 5 telemetry cards, 60 FPS sparkline waveforms, cumulative session stats.",
+          "Server Render Queue: Live job queue table with search, priority tags, real-time abort, and cache purge actions."
+        ]
+      },
+      {
+        "id": "troubleshooting",
+        "title": "7. FAQs & Troubleshooting",
+        "summary": "Common questions regarding firewall permissions, connection timeouts, and GPU drivers.",
+        "points": [
+          "Port 8000 Blocked: Click 'Windows Firewall' button in Server Topbar to automatically create elevated allow rule.",
+          "Driver Update: Ensure NVIDIA driver version 530+ is installed on worker PC for full NVENC SDK support.",
+          "Watch Folder Not Triggering: External editor must finish writing and release file lock before upload starts (2-second debounce).",
+          "Packet Loss / Cable Issue: Ensure Ethernet adapter is linked at 1.0 Gbps full duplex in Network Adapter settings."
+        ]
+      }
+    ]
+  },
+  "ur": {
+    "title": "System Documentation aur User Guide",
+    "subtitle": "GPUShare Client Studio aur Worker Server Node ki mukammal rehnumai",
+    "sections": [
+      {
+        "id": "overview",
+        "title": "1. Yeh Project Kyun Banaya Gya?",
+        "summary": "GPUShare laptop ko garam hone, battery jaldi khatam hone aur thermal throttling se bachata hai. Bhari video rendering aur AI kaam desktop GPU ko direct cable par bhej deta hai.",
+        "points": [
+          "Bina Internet Ke: 100% direct Ethernet Cat6 cable (1-2.5 Gbps) par chalta hai, internet ki zaroorat nahi.",
+          "Laptop Thanda Rehta Hai: Laptop ka CPU 1-3% load par rehta hai jabke desktop GPU 80-99% par render karta hai.",
+          "Live Telemetry: Desktop GPU ka temperature, VRAM aur logs live WebSocket ke zariye screen par nazar aate hain.",
+          "Automatic Fallback: Agar hardware encoder ruk jaye to foran multi-core CPU software encoding shuru ho jati hai."
+        ]
+      },
+      {
+        "id": "tasks",
+        "title": "2. 5 Task Workflows (Tafseeli Guide)",
+        "summary": "Video transcode, batch script, project folder, AI model training aur image inference ka aasan tareeqa.",
+        "points": [
+          "Video Transcoding: Video file drag karein -> 4K/1080p resolution aur NVENC preset chunein -> Submit karein.",
+          "Batch Script: Shell ya batch file bhej kar powerful workstation par execute karwayein.",
+          "All-in-One Folder: Pura project folder zip banakar bhein; server khud command chala kar output zip wapis bhejta hai.",
+          "Remote AI Training: ResNet18 aur MobileNetV2 models 100,000 images par remote GPU se train karein.",
+          "Google Lens Scanner: Koi bhi tasveer scan karein, server <25ms mein pehchaan kar result dikhata hai."
+        ]
+      },
+      {
+        "id": "verification",
+        "title": "3. Task Manager 100% Resource Verification",
+        "summary": "Kaise tasdeeq karein ke kaam sach mein doosray computer par ho raha hai.",
+        "points": [
+          "Laptop par Task Manager kholein: CPU load 1-3% aur GPU 0% rehta hai.",
+          "Desktop par Task Manager kholein: GPU Video Engine / 3D 80-99% par kaam karta nazar aayega.",
+          "Network Graph: File bhejte waqt Ethernet 500-900 Mbps spike karta hai, phir 0 ho jata hai.",
+          "Cryptographic SHA-256: Dono taraf file ka hash check hota hai taake file bilkul theek pohanche."
+        ]
+      },
+      {
+        "id": "ai_training",
+        "title": "4. GPUShare AI Training aur Google Lens",
+        "summary": "High-speed AI model training aur computer vision classification.",
+        "points": [
+          "100,000 Dataset: Fast synthetic stream bina file download ke GPU VRAM aur CUDA cores ko test karti hai.",
+          "Live Graph: Har epoch par loss, accuracy, images/second aur VRAM used update hote hain.",
+          "Interactive Google Lens: Cat, Car, Dog, Plane chips par click karein ya tasveer upload karke scan karein.",
+          "CPU vs GPU Test: Host CPU aur Remote GPU ka aamne saamne muqabla karke speedup dikhata hai."
+        ]
+      },
+      {
+        "id": "cable_pairing",
+        "title": "5. Direct Cable Pairing aur Static IP Setup",
+        "summary": "Bina kisi router ya switch ke direct Ethernet cable lagane ka tareeqa.",
+        "points": [
+          "Ek standard Cat5e/Cat6 cable laptop aur desktop ke darmiyan direct lagayein.",
+          "Static IP: Desktop par 192.168.99.1 aur Laptop par 192.168.99.2 set karein.",
+          "Automatic APIPA: Windows 10 seconds mein khud dono ko 169.254.x.x IP de deta hai.",
+          "Auto-Discovery: 'Auto-Discover UDP' button dabayein, port 8002 par 1.5 seconds mein server mil jayega."
+        ]
+      },
+      {
+        "id": "ui_manual",
+        "title": "6. Har Screen Ka Istemal (UI Manual)",
+        "summary": "Client Studio ki 7 screens aur Server Node ki 7 screens ka aasan jaiza.",
+        "points": [
+          "Client Dashboard: Hardware meters, quick connection bar, aur recent tasks list.",
+          "Client Live Monitor: Real-time progress bar, streaming console logs, aur cancel button.",
+          "Server Overview: 5 telemetry cards, 60 FPS live graphs, aur total session data.",
+          "Server Render Queue: Tamam render jobs ki list, search, aur abort karne ke buttons."
+        ]
+      },
+      {
+        "id": "troubleshooting",
+        "title": "7. Masail Ka Hal (FAQs & Troubleshooting)",
+        "summary": "Firewall, network connection aur NVIDIA driver ke aam masail aur unka hal.",
+        "points": [
+          "Port 8000 Blocked: Server topbar mein 'Windows Firewall' button dabayein taake rule khud add ho jaye.",
+          "NVIDIA Driver: Workstation par version 530+ driver zaroori hai taake NVENC theek se chale.",
+          "Watch Folder: External editor jab file save karke lock chhor deta hai tabhi upload shuru hota hai.",
+          "Speed Slow: Network adapter settings mein check karein ke link speed 1.0 Gbps Full Duplex ho."
+        ]
+      }
+    ]
+  }
+}

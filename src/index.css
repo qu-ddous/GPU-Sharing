@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 font-sans;
+  }
+}
+
+/* Modern Clean Card & Button Styles */
+.clay-card {
+  @apply bg-white border border-slate-200 rounded-2xl shadow-sm;
+}
+
+.clay-card-secondary {
+  @apply bg-slate-50 border border-slate-200 rounded-xl shadow-sm;
+}
+
+.clay-button-primary {
+  @apply bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 active:scale-[0.98] text-white font-semibold rounded-xl shadow-sm transition-all duration-150;
+}
+
+.clay-button-secondary {
+  @apply bg-white hover:bg-slate-100 active:scale-[0.98] text-slate-700 border border-slate-200 font-medium rounded-xl shadow-sm transition-all duration-150;
+}
+
+.clay-badge {
+  @apply px-2.5 py-1 text-xs font-semibold rounded-full border border-slate-200 bg-slate-100 text-slate-700;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
