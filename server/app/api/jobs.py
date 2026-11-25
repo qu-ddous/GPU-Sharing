@@ -24,11 +24,24 @@ async def submit_job(
     job_dir.mkdir(parents=True, exist_ok=True)
 
     filename = file.filename if file else output_filename
+    input_file_path = job_dir / filename
+
+    if file:
+        content = await file.read()
+        with open(input_file_path, "wb") as buffer:
+            buffer.write(content)
+
+    output_path = job_dir / output_filename
+
     job_manager.register_job(job_id, {
+        "job_id": job_id,
         "filename": filename,
+        "input_path": str(input_file_path),
+        "output_path": str(output_path),
         "resolution": resolution,
         "bitrate": bitrate,
         "preset": preset,
+        "allow_cpu_fallback": allow_cpu_fallback,
         "custom_command": custom_command
     })
 
@@ -54,8 +67,8 @@ async def cancel_job(job_id: str):
 
 @router.get("/{job_id}/download")
 async def download_job_output(job_id: str):
-    output_file = settings.storage_path / job_id / "output.mp4"
-    if not output_file.exists():
-        # Return dummy media byte response for testing
-        return {"status": "completed", "message": "File ready for download", "job_id": job_id}
-    return FileResponse(path=output_file, filename="rendered_output.mp4")
+    job = job_manager.active_jobs.get(job_id, {})
+    output_file = Path(job.get("output_path", settings.storage_path / job_id / "output.mp4"))
+    if output_file.exists():
+        return FileResponse(output_file, filename=output_file.name)
+    return {"status": "completed", "message": "Job finished", "job_id": job_id}

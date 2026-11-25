@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAIStore } from '../../store/useAIStore.js';
+import { useJobStore } from '../../store/useJobStore.js';
 import { 
   BrainCircuit, 
   Search, 
@@ -18,8 +19,13 @@ import {
   FileCode
 } from 'lucide-react';
 
-export const AIStudioView: React.FC = () => {
+interface AIStudioViewProps {
+  onNavigate?: (view: any) => void;
+}
+
+export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<'cnn' | 'lens' | 'custom' | 'benchmark'>('cnn');
+  const submitNewJob = useJobStore((s) => s.submitNewJob);
 
   const {
     isTraining,
@@ -444,8 +450,19 @@ export const AIStudioView: React.FC = () => {
 
           <div className="pt-2">
             <button
-              onClick={() => {
-                alert(`Script "${selectedScript}" submitted to remote worker daemon.`);
+              onClick={async () => {
+                const fd = new FormData();
+                fd.append('output_filename', 'python_output.txt');
+                fd.append('custom_command', `python ${selectedScript}`);
+                try {
+                  await submitNewJob(fd, selectedScript);
+                  if (onNavigate) {
+                    onNavigate('active_job');
+                  }
+                } catch (e) {
+                  console.error(e);
+                  alert('Unable to connect to worker node. Ensure server is online.');
+                }
               }}
               className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-bold px-6 py-3 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
             >

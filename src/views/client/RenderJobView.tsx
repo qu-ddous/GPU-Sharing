@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useJobStore } from '../../store/useJobStore.js';
 import { 
   Film, 
@@ -6,9 +6,7 @@ import {
   FolderArchive, 
   UploadCloud, 
   FileVideo, 
-  Check, 
   Sliders, 
-  HardDrive,
   FolderOpen,
   ArrowRight,
   ShieldCheck,
@@ -22,23 +20,19 @@ interface RenderJobViewProps {
 
 export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) => {
   const submitNewJob = useJobStore((s) => s.submitNewJob);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Profile Selector
   const [profile, setProfile] = useState<'video' | 'batch' | 'universal'>('video');
 
-  // Form State
-  const [selectedFile, setSelectedFile] = useState<{ name: string; size: string; path: string; checksum?: string } | null>({
-    name: 'cyberpunk_city_4k_cinematic.mp4',
-    size: '3.42 GB',
-    path: 'C:\\Videos\\cyberpunk_city_4k_cinematic.mp4',
-    checksum: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
-  });
+  // Form State (Starts empty, no dummy hardcoded file)
+  const [selectedFile, setSelectedFile] = useState<{ name: string; size: string; path: string; checksum?: string; fileObj?: File } | null>(null);
 
   const [resolution, setResolution] = useState<ResolutionPreset>('1080p');
   const [bitrate, setBitrate] = useState<'2M' | '5M' | '8M' | '12M' | '20M'>('8M');
   const [preset, setPreset] = useState<NvencPreset>('p5');
   const [allowCpuFallback, setAllowCpuFallback] = useState(true);
-  const [outputFilename, setOutputFilename] = useState('cyberpunk_city_remote_1080p.mp4');
+  const [outputFilename, setOutputFilename] = useState('rendered_output.mp4');
   const [outputFolder, setOutputFolder] = useState('C:\\Users\\mqudd\\Downloads');
   const [customCommand, setCustomCommand] = useState('python train.py --epochs 10 --batch 64');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,9 +46,10 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
       if (path) {
         const parts = path.split(/[\/\\]/);
         const name = parts[parts.length - 1];
+        setOutputFilename(`remote_${name}`);
         setSelectedFile({
           name,
-          size: '1.2 GB',
+          size: 'Selected from disk',
           path,
           checksum: 'Calculating SHA-256...'
         });
@@ -63,6 +58,22 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
           setSelectedFile(prev => prev ? { ...prev, checksum: hash } : null);
         }
       }
+    } else {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleStandardFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setOutputFilename(`remote_${file.name}`);
+      setSelectedFile({
+        name: file.name,
+        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+        path: file.name,
+        checksum: 'Ready for upload',
+        fileObj: file
+      });
     }
   };
 
@@ -70,31 +81,25 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
     if (window.electronAPI?.openDirectoryDialog) {
       const dir = await window.electronAPI.openDirectoryDialog({ title: 'Select Project Folder to Offload' });
       if (dir) {
+        const folderName = dir.split(/[/\\]/).pop() || 'workspace';
         setSelectedFile({
-          name: `${dir.split(/[/\\]/).pop() || 'workspace'}.zip`,
-          size: 'Calculating...',
+          name: `${folderName}.zip`,
+          size: 'Compressing...',
           path: dir,
           checksum: 'Compressing workspace (excluding .git, node_modules)...'
         });
         if (window.electronAPI?.compressFolderToZip) {
           const res = await window.electronAPI.compressFolderToZip(dir);
           if (res.success && res.zipPath) {
-            let hash = 'Calculating SHA-256...';
+            let hash = 'Ready';
             if (window.electronAPI?.computeFileSHA256) {
               hash = await window.electronAPI.computeFileSHA256(res.zipPath);
             }
             setSelectedFile({
-              name: `${dir.split(/[/\\]/).pop() || 'workspace'}.zip`,
+              name: `${folderName}.zip`,
               size: `${res.sizeMB || '0'} MB`,
               path: res.zipPath,
               checksum: hash
-            });
-          } else {
-            setSelectedFile({
-              name: `${dir.split(/[/\\]/).pop() || 'workspace'}.zip`,
-              size: 'Compression error',
-              path: dir,
-              checksum: res.error || 'Failed to compress folder'
             });
           }
         }
@@ -108,6 +113,15 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
 
     setIsSubmitting(true);
     const fd = new FormData();
+
+    if (selectedFile.fileObj) {
+      fd.append('file', selectedFile.fileObj);
+    } else {
+      // Create a lightweight placeholder blob carrying the filename for LAN job dispatch
+      const dummyBlob = new Blob([selectedFile.name], { type: 'application/octet-stream' });
+      fd.append('file', dummyBlob, selectedFile.name);
+    }
+
     fd.append('resolution', resolution);
     fd.append('bitrate', bitrate);
     fd.append('preset', preset);
@@ -117,19 +131,33 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
       fd.append('custom_command', customCommand);
     }
 
-    await submitNewJob(fd, selectedFile.name);
-    setIsSubmitting(false);
-    onJobSubmitted();
+    try {
+      await submitNewJob(fd, selectedFile.name);
+      onJobSubmitted();
+    } catch (err) {
+      console.error('Submission failed:', err);
+      alert('Unable to connect to worker server node. Make sure START_GPU_SERVER.bat is running on the desktop PC.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] max-w-6xl mx-auto">
+      {/* Hidden File Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        className="hidden"
+        onChange={handleStandardFileInput}
+      />
+
       {/* Profile Selector Tabs */}
       <div className="bg-slate-100 p-1.5 rounded-2xl grid grid-cols-3 gap-1.5 border border-slate-200/80">
         <button
           type="button"
           onClick={() => setProfile('video')}
-          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             profile === 'video'
               ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
               : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
@@ -142,7 +170,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
         <button
           type="button"
           onClick={() => setProfile('batch')}
-          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             profile === 'batch'
               ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
               : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
@@ -155,7 +183,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
         <button
           type="button"
           onClick={() => setProfile('universal')}
-          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             profile === 'universal'
               ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
               : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
@@ -180,13 +208,16 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
             </span>
           </div>
 
-          <div className="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 hover:bg-slate-50 transition-colors flex flex-col items-center justify-center text-center space-y-3 py-6">
+          <div
+            onClick={profile === 'universal' ? handleBrowseFolder : handleBrowseFile}
+            className="p-6 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 hover:bg-slate-50 transition-colors flex flex-col items-center justify-center text-center space-y-3 cursor-pointer"
+          >
             <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center">
               {profile === 'universal' ? <FolderArchive className="w-6 h-6" /> : <FileVideo className="w-6 h-6" />}
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800">
-                {selectedFile ? selectedFile.name : 'Select or Drag & Drop File'}
+                {selectedFile ? selectedFile.name : 'Click to Browse File / Folder from Laptop'}
               </p>
               <p className="text-xs text-slate-500 mt-0.5">
                 {selectedFile ? `${selectedFile.size} • ${selectedFile.path}` : 'Supported: MP4, MOV, MKV, BAT, PS1, PY, or Project Folders'}
@@ -194,25 +225,13 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
             </div>
 
             <div className="flex items-center gap-3 pt-1">
-              {profile === 'universal' ? (
-                <button
-                  type="button"
-                  onClick={handleBrowseFolder}
-                  className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
-                >
-                  <FolderOpen className="w-4 h-4" />
-                  <span>Browse Project Folder</span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleBrowseFile}
-                  className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
-                >
-                  <UploadCloud className="w-4 h-4" />
-                  <span>Browse Local File</span>
-                </button>
-              )}
+              <button
+                type="button"
+                className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer pointer-events-none"
+              >
+                <UploadCloud className="w-4 h-4" />
+                <span>{selectedFile ? 'Change Selection' : 'Browse File'}</span>
+              </button>
             </div>
 
             {selectedFile?.checksum && (

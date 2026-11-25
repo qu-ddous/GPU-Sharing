@@ -95,7 +95,7 @@ export const App: React.FC = () => {
           {clientView === 'dashboard' && <DashboardView onNavigate={setClientView} />}
           {clientView === 'render_job' && <RenderJobView onJobSubmitted={() => setClientView('active_job')} />}
           {clientView === 'active_job' && <ActiveJobView />}
-          {clientView === 'ai_studio' && <AIStudioView />}
+          {clientView === 'ai_studio' && <AIStudioView onNavigate={setClientView} />}
           {clientView === 'benchmarks' && <BenchmarksView />}
           {clientView === 'settings' && <SettingsView />}
           {clientView === 'docs' && <DocsView />}
