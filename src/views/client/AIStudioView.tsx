@@ -8,11 +8,15 @@ import {
   Zap, 
   Square, 
   Play, 
+  Pause,
   Sparkles,
   Camera,
   Cpu,
   Award,
-  FileCode
+  FileCode,
+  Download,
+  FileText,
+  TrendingUp
 } from 'lucide-react';
 
 interface AIStudioViewProps {
@@ -25,6 +29,9 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
 
   const {
     isTraining,
+    isPaused,
+    modelReady,
+    isUploadingDataset,
     modelArch,
     epochs,
     batchSize,
@@ -41,8 +48,14 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
     setBatchSize,
     setOptimizer,
     setHardwareTarget,
+    setDataset,
+    uploadDataset,
     startTraining,
+    pauseTraining,
+    resumeTraining,
     cancelTraining,
+    downloadTrainedModel,
+    downloadTrainingReport,
     classifyImage,
     runCpuVsGpuBenchmark
   } = useAIStore();
@@ -52,16 +65,26 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
 
   const handleSampleClick = (type: 'cat' | 'car' | 'dog' | 'plane') => {
     setLensSample(type);
-    const blob = new Blob(['sample-image-bytes'], { type: 'image/jpeg' });
-    classifyImage(blob);
+    const blob = new Blob([`sample-${type}-image-bytes`], { type: 'image/jpeg' });
+    classifyImage(blob, `${type}.jpg`);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      classifyImage(file);
+      classifyImage(file, file.name);
     }
   };
+
+  const handleDatasetUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      uploadDataset(file);
+    }
+  };
+
+  const history = trainingProgress.history || [];
+  const maxLoss = Math.max(1.0, ...history.map((h) => h.loss));
 
   return (
     <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
@@ -120,23 +143,39 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
       {activeTab === 'cnn' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div className="space-y-5">
-            {/* Dataset Card */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-3">
-              <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                Dataset Selection & Benchmark Stream
-              </h3>
+            {/* Dataset Card with Custom Upload + 100k Benchmark Preset */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-3.5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  Dataset Selection & LAN Transfer
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setDataset('GPUShare 100,000 Benchmark Dataset', 100000)}
+                  className="text-[11px] font-bold text-blue-600 hover:underline cursor-pointer"
+                >
+                  Use 100k Benchmark
+                </button>
+              </div>
+
               <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-blue-700 flex items-center gap-2">
                     <Sparkles className="w-[18px] h-[18px] text-violet-700" />
                     {datasetName}
                   </span>
-                  <span className="text-xs font-mono font-bold text-blue-900">{totalDatasetImages.toLocaleString()} Tensors</span>
+                  <span className="text-xs font-mono font-bold text-blue-900">{totalDatasetImages.toLocaleString()} Images</span>
                 </div>
                 <p className="text-xs text-slate-600">
-                  High-throughput in-memory synthetic image stream for testing maximum CUDA tensor performance.
+                  High-throughput PyTorch dataset stream or custom `.zip` dataset transferred directly to Worker Node.
                 </p>
               </div>
+
+              <label className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-xs font-semibold text-slate-700 transition-all">
+                <Upload className="w-4 h-4 text-blue-600" />
+                <span>{isUploadingDataset ? 'Uploading Dataset to Worker...' : 'Upload Custom Image Dataset (.zip)'}</span>
+                <input type="file" accept=".zip,.jpg,.png" onChange={handleDatasetUpload} className="hidden" />
+              </label>
             </div>
 
             {/* Hyperparameters Card */}
@@ -160,6 +199,8 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                   <label className="text-[11px] font-bold text-slate-500 uppercase">Epochs</label>
                   <input
                     type="number"
+                    min={1}
+                    max={100}
                     value={epochs}
                     onChange={(e) => setEpochs(Number(e.target.value))}
                     className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600"
@@ -205,15 +246,24 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                 </select>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 flex gap-2.5">
                 {isTraining ? (
-                  <button
-                    onClick={cancelTraining}
-                    className="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Square className="w-[18px] h-[18px] fill-current" />
-                    <span>Cancel Training Job</span>
-                  </button>
+                  <>
+                    <button
+                      onClick={isPaused ? resumeTraining : pauseTraining}
+                      className="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      {isPaused ? <Play className="w-4 h-4 fill-current" /> : <Pause className="w-4 h-4 fill-current" />}
+                      <span>{isPaused ? 'Resume' : 'Pause'}</span>
+                    </button>
+                    <button
+                      onClick={cancelTraining}
+                      className="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Square className="w-4 h-4 fill-current" />
+                      <span>Cancel</span>
+                    </button>
+                  </>
                 ) : (
                   <button
                     onClick={startTraining}
@@ -225,9 +275,37 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                 )}
               </div>
             </div>
+
+            {/* Model & Results Transfer Card */}
+            {modelReady && (
+              <div className="bg-emerald-50/70 p-5 rounded-2xl border border-emerald-200 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold text-emerald-900">Model & Results Ready for Transfer</span>
+                  <span className="text-[11px] font-mono font-bold text-emerald-700 bg-white px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    {trainingProgress.accuracy.toFixed(1)}% Acc
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    onClick={downloadTrainedModel}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition-all"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download Model (.pth)</span>
+                  </button>
+                  <button
+                    onClick={downloadTrainingReport}
+                    className="bg-white hover:bg-slate-50 text-emerald-800 border border-emerald-200 py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition-all"
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span>Download Report (.json)</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Right: Live Training Telemetry */}
+          {/* Right: Live Training Telemetry, Graph & Logs */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-5">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Live Training Telemetry</span>
@@ -255,11 +333,63 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               </div>
             </div>
 
+            {/* Real-Time Loss & Accuracy Live Graph */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="flex items-center justify-between text-[11px] font-bold">
+                <span className="text-slate-600 flex items-center gap-1.5">
+                  <TrendingUp className="w-4 h-4 text-blue-600" />
+                  Live Loss & Accuracy Curve
+                </span>
+                <div className="flex items-center gap-3 font-mono text-[10px]">
+                  <span className="text-rose-600">● Loss</span>
+                  <span className="text-emerald-600">● Accuracy %</span>
+                </div>
+              </div>
+              <div className="h-28 w-full bg-white rounded-lg border border-slate-200/70 p-2">
+                {history.length < 2 ? (
+                  <div className="h-full flex items-center justify-center text-[11px] text-slate-400">
+                    Start training to plot real-time epoch Loss & Accuracy curves...
+                  </div>
+                ) : (
+                  <svg viewBox="0 0 300 90" className="w-full h-full overflow-visible">
+                    <polyline
+                      fill="none"
+                      stroke="#E11D48"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      points={history
+                        .map((h, i) => {
+                          const x = (i / Math.max(1, history.length - 1)) * 290 + 5;
+                          const y = 85 - Math.min(1, h.loss / maxLoss) * 75;
+                          return `${x},${y}`;
+                        })
+                        .join(' ')}
+                    />
+                    <polyline
+                      fill="none"
+                      stroke="#059669"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      points={history
+                        .map((h, i) => {
+                          const x = (i / Math.max(1, history.length - 1)) * 290 + 5;
+                          const y = 85 - Math.min(1, h.accuracy / 100) * 75;
+                          return `${x},${y}`;
+                        })
+                        .join(' ')}
+                    />
+                  </svg>
+                )}
+              </div>
+            </div>
+
             <div className="space-y-1.5">
               <span className="text-xs font-bold text-slate-700">Epoch History & Log Stream</span>
-              <div className="p-3.5 rounded-xl bg-slate-900 font-mono text-[11px] text-slate-300 h-48 overflow-y-auto space-y-1">
+              <div className="p-3.5 rounded-xl bg-slate-900 font-mono text-[11px] text-slate-300 h-40 overflow-y-auto space-y-1">
                 {trainingProgress.recent_logs.map((log, i) => (
-                  <p key={i} className={log.includes('Acc:') ? 'text-emerald-400' : 'text-slate-300'}>
+                  <p key={i} className={log.includes('Acc:') || log.includes('[SUCCESS]') ? 'text-emerald-400' : 'text-slate-300'}>
                     {log}
                   </p>
                 ))}
@@ -411,7 +541,6 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                 }
               } catch (e) {
                 console.error(e);
-                alert('Unable to connect to worker node. Ensure server is online.');
               }
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
@@ -429,7 +558,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
             <div>
               <h3 className="text-sm font-bold text-slate-900">Host CPU vs Remote GPU Direct Comparison</h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Runs identical convolutional neural batches on your laptop's CPU vs the desktop's NVIDIA RTX GPU.
+                Runs identical convolutional neural batches on CPU vs the desktop's NVIDIA RTX GPU.
               </p>
             </div>
 
@@ -448,13 +577,13 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-slate-500 uppercase">Local Laptop CPU</span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase">Host CPU Baseline</span>
                     <Cpu className="w-[18px] h-[18px] text-slate-400" />
                   </div>
                   <p className="text-3xl font-extrabold text-slate-900 font-mono">
                     {benchmarkResult.cpuThroughput} <span className="text-sm font-normal text-slate-400">img/s</span>
                   </p>
-                  <p className="text-xs text-slate-500">100% Core Load • Thermal Throttling</p>
+                  <p className="text-xs text-slate-500">Multi-Core CPU Execution</p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-1.5">
@@ -465,7 +594,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                   <p className="text-3xl font-extrabold text-blue-700 font-mono">
                     {benchmarkResult.gpuThroughput} <span className="text-sm font-normal text-blue-500">img/s</span>
                   </p>
-                  <p className="text-xs text-blue-800 font-semibold">CUDA 12 Hardware Accelerated • 0% Laptop Fan</p>
+                  <p className="text-xs text-blue-800 font-semibold">CUDA Accelerated • 0% Laptop Fan</p>
                 </div>
               </div>
 
@@ -476,15 +605,15 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-emerald-900">
-                      Hardware Acceleration Winner: Remote Desktop GPU
+                      Hardware Acceleration Winner: Remote Desktop
                     </h4>
                     <p className="text-xs text-emerald-700">
-                      The remote GPU completed the inference {benchmarkResult.speedupMultiplier}x faster than your laptop.
+                      Speedup ratio measured at {benchmarkResult.speedupMultiplier}x throughput.
                     </p>
                   </div>
                 </div>
                 <span className="text-2xl font-black text-emerald-700 font-mono">
-                  {benchmarkResult.speedupMultiplier}x Faster
+                  {benchmarkResult.speedupMultiplier}x
                 </span>
               </div>
             </div>

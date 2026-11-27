@@ -68,6 +68,8 @@ export interface AIPredictResponse {
 
 export interface AITrainingProgress {
   is_training: boolean;
+  is_paused?: boolean;
+  model_ready?: boolean;
   epoch: number;
   total_epochs: number;
   loss: number;
@@ -75,6 +77,7 @@ export interface AITrainingProgress {
   speed_fps: number;
   vram_mb: number;
   recent_logs: string[];
+  history?: Array<{ epoch: number; loss: number; accuracy: number }>;
 }
 
 export interface JobItem {

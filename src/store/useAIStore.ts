@@ -1,9 +1,13 @@
 import { create } from 'zustand';
 import type { AIPredictResponse, AITrainingProgress } from '../types/index.js';
 import { apiClient } from '../services/apiClient.js';
+import { notifyToast } from './useToastStore.js';
 
 interface AIState {
   isTraining: boolean;
+  isPaused: boolean;
+  modelReady: boolean;
+  isUploadingDataset: boolean;
   modelArch: 'ResNet18-Lite' | 'MobileNetV2-Lite' | 'SimpleCNN';
   epochs: number;
   batchSize: number;
@@ -30,16 +34,24 @@ interface AIState {
   setOptimizer: (opt: any) => void;
   setHardwareTarget: (target: any) => void;
   setDataset: (name: string, count: number) => void;
+  uploadDataset: (file: File) => Promise<void>;
   startTraining: () => Promise<void>;
+  pauseTraining: () => Promise<void>;
+  resumeTraining: () => Promise<void>;
   cancelTraining: () => Promise<void>;
-  classifyImage: (file: File | Blob) => Promise<void>;
+  downloadTrainedModel: () => void;
+  downloadTrainingReport: () => void;
+  classifyImage: (file: File | Blob, filename?: string) => Promise<void>;
   runCpuVsGpuBenchmark: () => Promise<void>;
 }
 
-let trainingTimer: any = null;
+let trainingPollTimer: any = null;
 
 export const useAIStore = create<AIState>((set, get) => ({
   isTraining: false,
+  isPaused: false,
+  modelReady: false,
+  isUploadingDataset: false,
   modelArch: 'ResNet18-Lite',
   epochs: 10,
   batchSize: 64,
@@ -51,6 +63,8 @@ export const useAIStore = create<AIState>((set, get) => ({
 
   trainingProgress: {
     is_training: false,
+    is_paused: false,
+    model_ready: false,
     epoch: 0,
     total_epochs: 10,
     loss: 0.0,
@@ -59,8 +73,9 @@ export const useAIStore = create<AIState>((set, get) => ({
     vram_mb: 0,
     recent_logs: [
       '[System] PyTorch CUDA deep learning engine ready on remote workstation.',
-      '[System] Select hyperparameters and click "Start Remote Training on GPU" to launch.'
-    ]
+      '[System] Select dataset & hyperparameters and click "Start Remote Training on GPU".'
+    ],
+    history: []
   },
 
   lensResult: null,
@@ -77,25 +92,26 @@ export const useAIStore = create<AIState>((set, get) => ({
   setHardwareTarget: (hardwareTarget) => set({ hardwareTarget }),
   setDataset: (name, count) => set({ datasetName: name, totalDatasetImages: count }),
 
+  uploadDataset: async (file: File) => {
+    set({ isUploadingDataset: true });
+    const fd = new FormData();
+    fd.append('file', file);
+    try {
+      const res = await apiClient.uploadAIDataset(fd);
+      set({
+        datasetName: res.dataset_name || file.name,
+        totalDatasetImages: res.image_count || 1,
+        isUploadingDataset: false
+      });
+      notifyToast('Dataset Uploaded', `${res.image_count} images loaded onto Worker Node.`, 'success');
+    } catch {
+      set({ isUploadingDataset: false });
+      notifyToast('Dataset Upload Failed', 'Ensure Worker Node is connected before uploading dataset.', 'error');
+    }
+  },
+
   startTraining: async () => {
     const total = get().epochs;
-    set({
-      isTraining: true,
-      trainingProgress: {
-        is_training: true,
-        epoch: 1,
-        total_epochs: total,
-        loss: 0.6931,
-        accuracy: 50.0,
-        speed_fps: 1840,
-        vram_mb: 4200,
-        recent_logs: [
-          `[CUDA] Initializing tensor training loop on remote GPU (${get().modelArch})...`,
-          `[Batch] Epoch 1/${total} initialized with batch size ${get().batchSize}.`
-        ]
-      }
-    });
-
     try {
       await apiClient.startAITraining({
         model_arch: get().modelArch,
@@ -105,89 +121,120 @@ export const useAIStore = create<AIState>((set, get) => ({
         optimizer: get().optimizer,
         use_gpu: get().hardwareTarget.includes('GPU')
       });
-    } catch {}
 
-    // Real-time progressive step loop
-    if (trainingTimer) clearInterval(trainingTimer);
-    let ep = 1;
-    trainingTimer = setInterval(async () => {
-      if (!get().isTraining) {
-        clearInterval(trainingTimer);
-        return;
-      }
-
-      ep++;
-      const currentLoss = Math.max(0.04, 0.70 / Math.sqrt(ep));
-      const currentAcc = Math.min(98.5, 50.0 + (ep / total) * 48.0);
-      const logLine = `[CUDA] Epoch ${ep}/${total} complete — Loss: ${currentLoss.toFixed(4)} | Acc: ${currentAcc.toFixed(1)}% | 1,840 img/s`;
-
-      set((state) => ({
+      set({
+        isTraining: true,
+        isPaused: false,
+        modelReady: false,
         trainingProgress: {
-          ...state.trainingProgress,
-          epoch: Math.min(total, ep),
-          loss: currentLoss,
-          accuracy: currentAcc,
-          recent_logs: [logLine, ...state.trainingProgress.recent_logs].slice(0, 50)
+          is_training: true,
+          is_paused: false,
+          model_ready: false,
+          epoch: 0,
+          total_epochs: total,
+          loss: 0,
+          accuracy: 0,
+          speed_fps: 0,
+          vram_mb: 0,
+          recent_logs: [`[Engine] Starting real PyTorch ${get().modelArch} training on Worker Node...`],
+          history: []
         }
-      }));
+      });
 
-      if (ep >= total) {
-        clearInterval(trainingTimer);
-        set((state) => ({
-          isTraining: false,
-          trainingProgress: {
-            ...state.trainingProgress,
-            is_training: false,
-            recent_logs: [
-              `[SUCCESS] Training session finished successfully! Final Accuracy: ${currentAcc.toFixed(1)}%`,
-              ...state.trainingProgress.recent_logs
-            ]
+      notifyToast('Training Started', `${get().modelArch} running on remote Worker Node.`, 'info');
+
+      if (trainingPollTimer) clearInterval(trainingPollTimer);
+      trainingPollTimer = setInterval(async () => {
+        try {
+          const prog: AITrainingProgress = await apiClient.getAIProgress();
+          set({
+            isTraining: prog.is_training,
+            isPaused: Boolean(prog.is_paused),
+            modelReady: Boolean(prog.model_ready),
+            trainingProgress: prog
+          });
+
+          if (!prog.is_training) {
+            clearInterval(trainingPollTimer);
+            trainingPollTimer = null;
+            if (prog.model_ready) {
+              notifyToast(
+                'Training Complete!',
+                `Final Accuracy: ${prog.accuracy.toFixed(1)}% • Model (.pth) ready to download.`,
+                'success'
+              );
+            }
           }
-        }));
-      }
-    }, 1200);
+        } catch {
+          clearInterval(trainingPollTimer);
+          trainingPollTimer = null;
+          set({ isTraining: false });
+        }
+      }, 600);
+    } catch {
+      notifyToast('Training Failed', 'Worker Node unreachable. Connect to server first.', 'error');
+    }
+  },
+
+  pauseTraining: async () => {
+    try {
+      await apiClient.pauseAITraining();
+      set({ isPaused: true });
+      notifyToast('Training Paused', 'PyTorch epoch loop paused on Worker Node.', 'warning');
+    } catch {}
+  },
+
+  resumeTraining: async () => {
+    try {
+      await apiClient.resumeAITraining();
+      set({ isPaused: false });
+      notifyToast('Training Resumed', 'PyTorch epoch loop resumed.', 'info');
+    } catch {}
   },
 
   cancelTraining: async () => {
-    if (trainingTimer) clearInterval(trainingTimer);
+    if (trainingPollTimer) {
+      clearInterval(trainingPollTimer);
+      trainingPollTimer = null;
+    }
+    try {
+      await apiClient.cancelAITraining();
+    } catch {}
     set((state) => ({
       isTraining: false,
+      isPaused: false,
       trainingProgress: {
         ...state.trainingProgress,
         is_training: false,
         recent_logs: ['[Abort] Training loop stopped by operator.', ...state.trainingProgress.recent_logs]
       }
     }));
-    try {
-      await apiClient.cancelAITraining();
-    } catch {}
+    notifyToast('Training Cancelled', 'PyTorch training aborted.', 'warning');
   },
 
-  classifyImage: async (file) => {
+  downloadTrainedModel: () => {
+    const url = apiClient.getAIModelDownloadUrl();
+    window.open(url, '_blank');
+    notifyToast('Downloading Model', 'Fetching trained .pth weights from Worker Node.', 'success');
+  },
+
+  downloadTrainingReport: () => {
+    const url = apiClient.getAIReportDownloadUrl();
+    window.open(url, '_blank');
+    notifyToast('Downloading Report', 'Fetching training_report.json from Worker Node.', 'success');
+  },
+
+  classifyImage: async (file, filename) => {
     set({ isPredicting: true });
     const fd = new FormData();
-    fd.append('file', file);
+    fd.append('file', file, filename || (file instanceof File ? file.name : 'sample.jpg'));
     try {
       const res = await apiClient.predictImage(fd);
       set({ lensResult: res, isPredicting: false });
+      notifyToast('Classification Complete', `${res.predicted_class} (${res.confidence_percent}%)`, 'success');
     } catch {
-      // In case server is not running or file was blob
-      setTimeout(() => {
-        set({
-          lensResult: {
-            predicted_class: '🐱 Persian Cat',
-            confidence_percent: 98.2,
-            top_candidates: [
-              { label: 'Persian Longhair', probability: 0.982 },
-              { label: 'Domestic Angora', probability: 0.014 },
-              { label: 'Maine Coon', probability: 0.004 }
-            ],
-            inference_latency_ms: 16.4,
-            device_used: 'Remote NVIDIA GPU (CUDA 12)'
-          },
-          isPredicting: false
-        });
-      }, 350);
+      set({ isPredicting: false });
+      notifyToast('Classification Failed', 'Connect to Worker Node to run remote vision inference.', 'error');
     }
   },
 
@@ -196,17 +243,10 @@ export const useAIStore = create<AIState>((set, get) => ({
     try {
       const res = await apiClient.runAIBenchmark();
       set({ benchmarkResult: res, isBenchmarking: false });
+      notifyToast('Benchmark Complete', `Speedup: ${res.speedupMultiplier}x (${res.gpuThroughput} img/s)`, 'success');
     } catch {
-      setTimeout(() => {
-        set({
-          benchmarkResult: {
-            cpuThroughput: 144,
-            gpuThroughput: 1840,
-            speedupMultiplier: 12.8
-          },
-          isBenchmarking: false
-        });
-      }, 1200);
+      set({ isBenchmarking: false });
+      notifyToast('Benchmark Failed', 'Unable to reach Worker Node for hardware benchmark.', 'error');
     }
   }
 }));

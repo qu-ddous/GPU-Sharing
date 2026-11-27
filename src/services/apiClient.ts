@@ -72,8 +72,26 @@ class ApiClient {
     return res.data;
   }
 
+  public async uploadAIDataset(formData: FormData) {
+    const res = await this.client.post('/api/v1/ai/upload-dataset', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 120000,
+    });
+    return res.data;
+  }
+
   public async startAITraining(params: Record<string, any>) {
     const res = await this.client.post('/api/v1/ai/train', params);
+    return res.data;
+  }
+
+  public async pauseAITraining() {
+    const res = await this.client.post('/api/v1/ai/pause');
+    return res.data;
+  }
+
+  public async resumeAITraining() {
+    const res = await this.client.post('/api/v1/ai/resume');
     return res.data;
   }
 
@@ -85,6 +103,14 @@ class ApiClient {
   public async getAIProgress() {
     const res = await this.client.get('/api/v1/ai/progress');
     return res.data;
+  }
+
+  public getAIModelDownloadUrl(): string {
+    return `${this.baseURL}/api/v1/ai/download-model`;
+  }
+
+  public getAIReportDownloadUrl(): string {
+    return `${this.baseURL}/api/v1/ai/download-report`;
   }
 
   public async predictImage(formData: FormData) {
