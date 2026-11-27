@@ -85,6 +85,7 @@ export const LottieToastContainer: React.FC = () => {
                 <Lottie
                   src={animData}
                   autoplay
+                  speed={2}
                   loop={t.type === 'info' || t.type === 'warning'}
                   className="w-11 h-11"
                 />

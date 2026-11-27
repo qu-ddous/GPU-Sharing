@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { JobItem } from '../types/index.js';
+import { notifyToast } from './useToastStore.js';
 
 export interface ClientSession {
   ip: string;
@@ -108,6 +109,11 @@ export const useServerNodeStore = create<ServerNodeState>((set, get) => ({
   toggleDaemon: () => {
     const next = !get().daemonOnline;
     set({ daemonOnline: next });
+    notifyToast(
+      next ? 'Daemon Running' : 'Daemon Paused',
+      next ? 'Worker Server is now accepting LAN jobs.' : 'Worker Server daemon paused.',
+      next ? 'success' : 'warning'
+    );
     get().addEventLog(
       next ? 'SUCCESS' : 'WARNING',
       '[Daemon]',

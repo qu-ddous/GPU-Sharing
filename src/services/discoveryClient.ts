@@ -1,8 +1,6 @@
 import type { DiscoveredServer } from '../types/index.js';
 
 export async function scanForServers(): Promise<DiscoveredServer[]> {
-  const discovered: DiscoveredServer[] = [];
-
   // 1. Try native UDP broadcast scan first (if running in Electron)
   if (window.electronAPI?.startDiscoveryScan) {
     try {
@@ -15,36 +13,40 @@ export async function scanForServers(): Promise<DiscoveredServer[]> {
     }
   }
 
-  // 2. Active Probe candidates (Localhost & common direct Cat6 Subnets)
-  const candidateIps = [
-    '127.0.0.1',
-    '192.168.99.1',
-    '192.168.1.1',
-    '192.168.0.1'
-  ];
+  // 2. Parallel Active Probe across cached IP + Localhost + common Cat6 subnets (300ms max)
+  const cachedIp = localStorage.getItem('gpushare_last_ip');
+  const candidateIps = Array.from(
+    new Set([
+      ...(cachedIp ? [cachedIp] : []),
+      '127.0.0.1',
+      '192.168.99.1',
+      '192.168.1.1',
+      '192.168.0.1'
+    ])
+  );
 
-  for (const ip of candidateIps) {
+  const probe = async (ip: string): Promise<DiscoveredServer | null> => {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 350);
+      const timeoutId = setTimeout(() => controller.abort(), 300);
       const res = await fetch(`http://${ip}:8000/api/v1/ping`, { signal: controller.signal });
       clearTimeout(timeoutId);
-
       if (res.ok) {
         const data = await res.json();
         if (data && data.pong) {
-          discovered.push({
+          return {
             hostname: ip === '127.0.0.1' ? 'Local Worker Daemon' : 'Direct LAN Worker Node',
             ip,
             port: 8000,
             gpu: 'Dedicated GPU Compute',
             protocol_version: 'v1.0.0'
-          });
-          break; // Found active server
+          };
         }
       }
     } catch {}
-  }
+    return null;
+  };
 
-  return discovered;
+  const results = await Promise.all(candidateIps.map(probe));
+  return results.filter((r): r is DiscoveredServer => r !== null);
 }

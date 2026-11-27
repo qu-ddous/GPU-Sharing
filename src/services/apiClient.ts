@@ -35,17 +35,16 @@ class ApiClient {
   public async ping(): Promise<{ pong: boolean; latency: number }> {
     const start = performance.now();
     try {
-      const res = await this.client.get('/api/v1/ping', { timeout: 3000 });
+      const res = await this.client.get('/api/v1/ping', { timeout: 1200 });
       const latency = Math.round((performance.now() - start) * 10) / 10;
       return { pong: res.data?.pong === true, latency };
     } catch {
-      // Return simulated latency when offline or testing
       return { pong: false, latency: 999 };
     }
   }
 
   public async getHealth() {
-    const res = await this.client.get('/api/v1/health');
+    const res = await this.client.get('/api/v1/health', { timeout: 2500 });
     return res.data;
   }
 

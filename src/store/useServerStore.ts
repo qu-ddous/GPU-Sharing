@@ -44,23 +44,32 @@ const emptyHardware: HardwareInfo = {
 let healthPollInterval: any = null;
 
 export const useServerStore = create<ServerState>((set, get) => ({
-  serverIp: '192.168.99.1',
-  serverPort: 8000,
+  serverIp: localStorage.getItem('gpushare_last_ip') || '192.168.99.1',
+  serverPort: Number(localStorage.getItem('gpushare_last_port')) || 8000,
   apiToken: '',
   isConnected: false,
   latencyMs: 0,
   nvencReady: false,
-  hardware: emptyHardware,
+  hardware: (() => {
+    try {
+      const cached = localStorage.getItem('gpushare_hw_cache');
+      return cached ? JSON.parse(cached) : emptyHardware;
+    } catch {
+      return emptyHardware;
+    }
+  })(),
   isScanning: false,
   lastPingTime: 0,
 
   setServerIp: (ip: string) => {
+    localStorage.setItem('gpushare_last_ip', ip);
     set({ serverIp: ip });
     apiClient.setBaseURL(`http://${ip}:${get().serverPort}`);
     wsClient.setServerUrl(`http://${ip}:${get().serverPort}`);
   },
 
   setServerPort: (port: number) => {
+    localStorage.setItem('gpushare_last_port', String(port));
     set({ serverPort: port });
     apiClient.setBaseURL(`http://${get().serverIp}:${port}`);
     wsClient.setServerUrl(`http://${get().serverIp}:${port}`);
@@ -112,6 +121,9 @@ export const useServerStore = create<ServerState>((set, get) => ({
   fetchHealth: async () => {
     try {
       const data: HealthResponse = await apiClient.getHealth();
+      try {
+        localStorage.setItem('gpushare_hw_cache', JSON.stringify(data.hardware));
+      } catch {}
       set({
         isConnected: true,
         nvencReady: data.ffmpeg?.nvenc_available ?? false,

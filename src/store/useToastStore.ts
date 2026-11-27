@@ -20,13 +20,17 @@ export const useToastStore = create<ToastState>((set) => ({
   notify: ({ title, message, type }) => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     set((state) => ({
-      toasts: [...state.toasts.slice(-3), { id, title, message, type }]
+      // Replace any previous 'info' loading toast when a final result arrives for instant feel
+      toasts: [
+        ...state.toasts.filter((t) => t.type !== 'info').slice(-2),
+        { id, title, message, type }
+      ]
     }));
     setTimeout(() => {
       set((state) => ({
         toasts: state.toasts.filter((t) => t.id !== id)
       }));
-    }, 4000);
+    }, 3000);
   },
   dismiss: (id) => {
     set((state) => ({
