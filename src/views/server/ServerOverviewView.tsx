@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { 
   Cpu, 
   HardDrive, 
@@ -36,6 +37,7 @@ export const ServerOverviewView: React.FC = () => {
   const handleCopyIp = () => {
     navigator.clipboard.writeText(`${workerIp}:${workerPort}`);
     setCopied(true);
+    notifyToast('Worker IP Copied', `${workerIp}:${workerPort} copied to clipboard.`, 'success');
     setTimeout(() => setCopied(false), 2000);
   };
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useServerStore } from '../../store/useServerStore.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { Settings, FolderCheck, Save, RotateCcw, Key, Folder, Check } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
@@ -39,6 +40,7 @@ export const SettingsView: React.FC = () => {
     }
 
     setSavedToast(true);
+    notifyToast('Preferences Saved', `Target host set to ${ipInput}:${portInput}`, 'success');
     setTimeout(() => setSavedToast(false), 2500);
   };
 

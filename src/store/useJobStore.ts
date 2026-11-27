@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { JobItem, JobStatus, ProgressEvent } from '../types/index.js';
 import { wsClient } from '../services/wsClient.js';
 import { apiClient } from '../services/apiClient.js';
+import { notifyToast } from './useToastStore.js';
 
 interface JobState {
   activeJob: JobItem | null;
@@ -50,6 +51,13 @@ export const useJobStore = create<JobState>((set, get) => ({
       const spd = event.speed ?? active.speed ?? '0x';
       const fps = event.fps ?? active.fps ?? 0;
 
+      const newStatus = (event.status as JobStatus) || active.status;
+      if (newStatus === 'completed' && active.status !== 'completed') {
+        notifyToast('Render Completed!', `${active.filename} finished on remote GPU.`, 'success');
+      } else if (newStatus === 'failed' && active.status !== 'failed') {
+        notifyToast('Task Failed', `${active.filename} encountered an error.`, 'error');
+      }
+
       const updatedJob: JobItem = {
         ...active,
         percent: pct,
@@ -57,7 +65,7 @@ export const useJobStore = create<JobState>((set, get) => ({
         eta_seconds: eta,
         speed: spd,
         fps: fps,
-        status: (event.status as JobStatus) || active.status,
+        status: newStatus,
       };
 
       const newLogs = event.message 
@@ -109,9 +117,11 @@ export const useJobStore = create<JobState>((set, get) => ({
         get().updateFromProgressEvent(event);
       });
 
+      notifyToast('Workload Offloaded', `"${filename}" dispatched to remote GPU (${resp.job_id})`, 'info');
       return resp.job_id;
     } catch (err: any) {
       console.error('Job submission failed:', err);
+      notifyToast('Submission Failed', 'Could not transmit job to Worker Node.', 'error');
       throw err;
     }
   },
@@ -126,6 +136,7 @@ export const useJobStore = create<JobState>((set, get) => ({
         activeJob: state.activeJob ? { ...state.activeJob, status: 'failed' } : null,
         consoleLogs: [...state.consoleLogs, `[Client] Task ${active.id} cancelled by user.`],
       }));
+      notifyToast('Task Cancelled', `Job ${active.id} stopped on Worker Node.`, 'warning');
     }
   },
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Zap, CheckCircle2, Play, Loader2 } from 'lucide-react';
 import { apiClient } from '../../services/apiClient.js';
+import { notifyToast } from '../../store/useToastStore.js';
 
 interface BenchmarkStep {
   id: number;
@@ -58,6 +59,7 @@ export const BenchmarksView: React.FC = () => {
     const mult = Number((gpuFps / 24.2).toFixed(1));
     setSpeedupResult({ cpuFps: 24.2, gpuFps, multiplier: mult });
     setSteps(prev => prev.map(s => s.id === 5 ? { ...s, status: 'completed', result: `${mult}x Speedup • 0% Laptop Throttling` } : s));
+    notifyToast('Benchmark Complete!', `Remote GPU achieved ${mult}x speedup (${gpuFps} FPS).`, 'success');
 
     setIsRunning(false);
   };

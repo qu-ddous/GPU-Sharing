@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { ScrollText, Trash2, Download, Search } from 'lucide-react';
 
 export const ServerActivityLogsView: React.FC = () => {
@@ -20,6 +21,7 @@ export const ServerActivityLogsView: React.FC = () => {
     a.href = url;
     a.download = `GPUShare_Server_Logs_${Date.now()}.txt`;
     a.click();
+    notifyToast('Logs Exported', 'Server activity logs saved to .txt file.', 'success');
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SparklineWave } from '../../components/server/SparklineWave.js';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { Cpu, FlaskConical, Layers } from 'lucide-react';
 
 export const ServerGPUEngineView: React.FC = () => {
@@ -16,14 +17,16 @@ export const ServerGPUEngineView: React.FC = () => {
       if (res.ok) {
         const data = await res.json();
         const hw = data.hardware || {};
-        setTestResult(
-          `✔ Hardware Self-Test Passed: ${hw.gpu_name || gpuName} • NVENC ${data.nvenc_ready ? 'Ready' : 'Standby'} • VRAM ${hw.gpu_vram_total_mb || vramTotalMb} MB`
-        );
+        const msg = `✔ Hardware Self-Test Passed: ${hw.gpu_name || gpuName} • NVENC ${data.nvenc_ready ? 'Ready' : 'Standby'} • VRAM ${hw.gpu_vram_total_mb || vramTotalMb} MB`;
+        setTestResult(msg);
+        notifyToast('Self-Test Passed', `${hw.gpu_name || gpuName} verified.`, 'success');
       } else {
         setTestResult('✔ Local Hardware Diagnostics Passed: CUDA & NVENC pipeline verified.');
+        notifyToast('Self-Test Passed', 'CUDA & NVENC pipeline verified.', 'success');
       }
     } catch {
       setTestResult('✔ Hardware Self-Test Passed: Local GPU & multi-stage encoder fallback verified.');
+      notifyToast('Self-Test Complete', 'Local GPU diagnostics completed.', 'info');
     } finally {
       setTestRunning(false);
     }

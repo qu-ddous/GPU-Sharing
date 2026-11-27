@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { Power, Shield, Copy, Check, Users } from 'lucide-react';
 
 export const ServerTopbar: React.FC = () => {
@@ -15,6 +16,7 @@ export const ServerTopbar: React.FC = () => {
   const handleCopyIp = () => {
     navigator.clipboard.writeText(`${workerIp}:${workerPort}`);
     setCopied(true);
+    notifyToast('Worker IP Copied', `${workerIp}:${workerPort} copied to clipboard.`, 'success');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -23,6 +25,7 @@ export const ServerTopbar: React.FC = () => {
       await window.electronAPI.unblockFirewall(workerPort);
     }
     setFirewallToast(true);
+    notifyToast('Firewall Rule Applied', `Port ${workerPort} allowed for incoming LAN connections.`, 'success');
     setTimeout(() => setFirewallToast(false), 3000);
   };
 

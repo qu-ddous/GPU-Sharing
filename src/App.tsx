@@ -21,6 +21,7 @@ import { ServerGPUEngineView } from './views/server/ServerGPUEngineView.js';
 import { ServerNetworkView } from './views/server/ServerNetworkView.js';
 import { ServerSettingsView } from './views/server/ServerSettingsView.js';
 import { ServerDocsView } from './views/server/ServerDocsView.js';
+import { LottieToastContainer } from './components/shared/LottieToastContainer.js';
 
 export const App: React.FC = () => {
   const [appMode, setAppMode] = useState<'client' | 'server'>('client');
@@ -81,6 +82,7 @@ export const App: React.FC = () => {
             {serverView === 'server_settings' && <ServerSettingsView />}
             {serverView === 'server_docs' && <ServerDocsView />}
           </div>
+          <LottieToastContainer />
         </main>
       </div>
     );
@@ -108,6 +110,7 @@ export const App: React.FC = () => {
           {clientView === 'settings' && <SettingsView />}
           {clientView === 'docs' && <DocsView />}
         </div>
+        <LottieToastContainer />
       </main>
     </div>
   );

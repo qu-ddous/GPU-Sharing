@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { HardwareInfo, HealthResponse } from '../types/index.js';
 import { apiClient } from '../services/apiClient.js';
 import { wsClient } from '../services/wsClient.js';
+import { notifyToast } from './useToastStore.js';
 
 interface ServerState {
   serverIp: string;
@@ -91,9 +92,11 @@ export const useServerStore = create<ServerState>((set, get) => ({
         }
       }, 3000);
 
+      notifyToast('Worker Node Connected', `Paired with ${targetIp}:${targetPort} (${res.latency.toFixed(1)} ms)`, 'success');
       return true;
     } else {
       set({ isConnected: false, latencyMs: 0 });
+      notifyToast('Connection Failed', `Unable to reach Worker Node at ${targetIp}:${targetPort}`, 'error');
       return false;
     }
   },

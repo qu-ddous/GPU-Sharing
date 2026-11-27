@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useServerStore } from '../../store/useServerStore.js';
 import { useJobStore } from '../../store/useJobStore.js';
 import { scanForServers } from '../../services/discoveryClient.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { 
   Cpu, 
   HardDrive, 
@@ -60,7 +61,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
       setInputPort(String(found[0].port));
       setServerIp(found[0].ip);
       setServerPort(found[0].port);
+      notifyToast('Worker Node Discovered!', `Found ${found[0].ip}:${found[0].port} via UDP 8002`, 'success');
       connect(found[0].ip, found[0].port);
+    } else {
+      notifyToast('No Nodes Found', 'No Worker Node responded on UDP Port 8002.', 'warning');
     }
   };
 

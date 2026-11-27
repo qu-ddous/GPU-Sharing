@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { Save, Power, HardDrive, Shield, Film, Key, Settings } from 'lucide-react';
 
 export const ServerSettingsView: React.FC = () => {
@@ -46,6 +47,7 @@ export const ServerSettingsView: React.FC = () => {
       apiSecretToken: secretToken
     });
     setSaved(true);
+    notifyToast('Configuration Saved', `Server settings applied on port ${port}.`, 'success');
     setTimeout(() => setSaved(false), 2000);
   };
 
