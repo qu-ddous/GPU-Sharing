@@ -1,6 +1,7 @@
 import React from 'react';
 import { useJobStore } from '../../store/useJobStore.js';
 import { useServerStore } from '../../store/useServerStore.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { 
   Radio, 
   Square, 
@@ -111,7 +112,10 @@ export const ActiveJobView: React.FC = () => {
             </button>
           ) : (
             <button
-              onClick={() => fetchHealth()}
+              onClick={async () => {
+                await fetchHealth();
+                notifyToast('Telemetry Refreshed', 'Fetched latest hardware stats from Worker Node.', 'info');
+              }}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 shadow-xs cursor-pointer"
             >
               <RefreshCw className="w-4 h-4" />
@@ -219,7 +223,10 @@ export const ActiveJobView: React.FC = () => {
             <span className="text-xs font-bold text-slate-800">Remote Worker Console Stream</span>
           </div>
           <button
-            onClick={clearLogs}
+            onClick={() => {
+              clearLogs();
+              notifyToast('Console Cleared', 'Output buffer cleared.', 'info');
+            }}
             className="text-[11px] font-semibold text-slate-600 hover:text-rose-700 flex items-center gap-1 transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5 text-rose-600" />

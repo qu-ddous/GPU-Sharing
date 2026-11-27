@@ -1,5 +1,6 @@
 import React from 'react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
+import { notifyToast } from '../../store/useToastStore.js';
 import { ListOrdered, Inbox } from 'lucide-react';
 
 export const ServerRenderQueueView: React.FC = () => {
@@ -74,14 +75,20 @@ export const ServerRenderQueueView: React.FC = () => {
                     <td className="py-3 px-4 text-right space-x-2">
                       {job.status === 'rendering' && (
                         <button
-                          onClick={() => cancelJob(job.id)}
+                          onClick={() => {
+                            cancelJob(job.id);
+                            notifyToast('Job Cancelled', `Job ${job.id} cancelled.`, 'warning');
+                          }}
                           className="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-xs font-semibold cursor-pointer transition-all"
                         >
                           Cancel
                         </button>
                       )}
                       <button
-                        onClick={() => purgeJob(job.id)}
+                        onClick={() => {
+                          purgeJob(job.id);
+                          notifyToast('Job Removed', `Job ${job.id} purged from queue.`, 'info');
+                        }}
                         className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-semibold cursor-pointer transition-all"
                       >
                         Purge

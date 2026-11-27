@@ -49,11 +49,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
   const handleConnect = () => {
     setServerIp(inputIp);
     setServerPort(Number(inputPort));
+    notifyToast('Connecting...', `Pinging Worker Node at ${inputIp}:${inputPort}`, 'info');
     connect(inputIp, Number(inputPort));
   };
 
   const handleDiscovery = async () => {
     setIsScanning(true);
+    notifyToast('Scanning LAN...', 'Searching for Worker Nodes on UDP Port 8002.', 'info');
     const found = await scanForServers();
     setIsScanning(false);
     if (found.length > 0) {

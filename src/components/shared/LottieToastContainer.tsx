@@ -1,8 +1,54 @@
 import React from 'react';
 import { Lottie } from 'lottie-react';
-import { X } from 'lucide-react';
-import { useToastStore } from '../../store/useToastStore.js';
+import { X, CheckCircle2, Info, AlertTriangle, XCircle } from 'lucide-react';
+import { useToastStore, ToastType } from '../../store/useToastStore.js';
 import { successLottie, infoLottie, errorLottie } from '../../assets/lottieAnimations.js';
+
+class LottieSafeBoundary extends React.Component<
+  { fallback: React.ReactNode; children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
+const FallbackIcon: React.FC<{ type: ToastType }> = ({ type }) => {
+  if (type === 'error') {
+    return (
+      <div className="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center animate-bounce">
+        <XCircle className="w-6 h-6" />
+      </div>
+    );
+  }
+  if (type === 'warning') {
+    return (
+      <div className="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center animate-pulse">
+        <AlertTriangle className="w-6 h-6" />
+      </div>
+    );
+  }
+  if (type === 'info') {
+    return (
+      <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center animate-pulse">
+        <Info className="w-6 h-6" />
+      </div>
+    );
+  }
+  return (
+    <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center animate-bounce">
+      <CheckCircle2 className="w-6 h-6" />
+    </div>
+  );
+};
 
 export const LottieToastContainer: React.FC = () => {
   const toasts = useToastStore((s) => s.toasts);
@@ -11,7 +57,7 @@ export const LottieToastContainer: React.FC = () => {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none">
+    <div className="fixed top-16 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none">
       {toasts.map((t) => {
         const animData =
           t.type === 'error'
@@ -20,27 +66,29 @@ export const LottieToastContainer: React.FC = () => {
             ? infoLottie
             : successLottie;
 
-        const borderClass =
+        const accentClass =
           t.type === 'error'
-            ? 'border-rose-200'
+            ? 'border-rose-200 border-l-4 border-l-rose-600'
             : t.type === 'warning'
-            ? 'border-amber-200'
+            ? 'border-amber-200 border-l-4 border-l-amber-500'
             : t.type === 'info'
-            ? 'border-blue-200'
-            : 'border-emerald-200';
+            ? 'border-blue-200 border-l-4 border-l-blue-600'
+            : 'border-emerald-200 border-l-4 border-l-emerald-600';
 
         return (
           <div
             key={t.id}
-            className={`pointer-events-auto bg-white/95 backdrop-blur-md border ${borderClass} rounded-2xl p-3.5 shadow-lg shadow-slate-900/10 flex items-center gap-3 transition-all`}
+            className={`pointer-events-auto bg-white border ${accentClass} rounded-2xl p-3.5 shadow-xl shadow-slate-900/15 flex items-center gap-3 transition-all`}
           >
             <div className="w-11 h-11 shrink-0 flex items-center justify-center">
-              <Lottie
-                src={animData}
-                autoplay
-                loop={t.type === 'info' || t.type === 'warning'}
-                className="w-11 h-11"
-              />
+              <LottieSafeBoundary fallback={<FallbackIcon type={t.type} />}>
+                <Lottie
+                  src={animData}
+                  autoplay
+                  loop={t.type === 'info' || t.type === 'warning'}
+                  className="w-11 h-11"
+                />
+              </LottieSafeBoundary>
             </div>
 
             <div className="flex-1 min-w-0">

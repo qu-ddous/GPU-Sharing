@@ -27,7 +27,9 @@ export const ServerSettingsView: React.FC = () => {
   const [saved, setSaved] = useState(false);
 
   const handleGenerateToken = () => {
-    setSecretToken('gpu_sec_' + Math.random().toString(36).substring(2, 12));
+    const tok = 'gpu_sec_' + Math.random().toString(36).substring(2, 12);
+    setSecretToken(tok);
+    notifyToast('Token Generated', 'New API secret token generated. Click Save to apply.', 'info');
   };
 
   const handleSave = () => {

@@ -50,6 +50,7 @@ export const SettingsView: React.FC = () => {
     setTokenInput('');
     setWatchPath('C:\\Videos\\Premiere_Exports');
     setWatchEnabled(true);
+    notifyToast('Defaults Restored', 'Connection & watch folder reset to defaults.', 'info');
   };
 
   return (
