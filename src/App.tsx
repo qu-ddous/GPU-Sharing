@@ -62,10 +62,10 @@ export const App: React.FC = () => {
   // -------------------------------------------------------------
   if (appMode === 'server') {
     return (
-      <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans text-slate-800">
+      <div className="flex h-screen w-screen overflow-hidden bg-[#F8FAFC] font-sans text-slate-900">
         <ServerSidebar currentView={serverView} onNavigate={setServerView} />
 
-        <main className="flex-1 flex flex-col min-w-0 bg-slate-50">
+        <main className="flex-1 flex flex-col min-w-0 bg-[#F8FAFC]">
           <ServerTopbar />
 
           <div className="flex-1 overflow-hidden">

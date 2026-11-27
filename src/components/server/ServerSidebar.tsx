@@ -3,7 +3,8 @@ import {
   BarChart3, 
   ListOrdered, 
   ScrollText, 
-  Cpu
+  Cpu,
+  Zap
 } from 'lucide-react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
 
@@ -19,66 +20,115 @@ interface ServerSidebarProps {
 
 export const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentView, onNavigate }) => {
   const daemonOnline = useServerNodeStore((s) => s.daemonOnline);
+  const workerPort = useServerNodeStore((s) => s.workerPort);
   const gpuName = useServerNodeStore((s) => s.gpuName);
 
-  const navItems: Array<{ id: ServerNavView; label: string; icon: React.ReactNode }> = [
-    { id: 'server_overview', label: 'Overview & Monitor', icon: <BarChart3 className="w-4 h-4" /> },
-    { id: 'render_queue', label: 'Render Queue', icon: <ListOrdered className="w-4 h-4" /> },
-    { id: 'activity_logs', label: 'Activity Logs', icon: <ScrollText className="w-4 h-4" /> },
+  const navItems: Array<{ id: ServerNavView; label: string; icon: React.ReactNode; badgeClass: string }> = [
+    {
+      id: 'server_overview',
+      label: 'Overview & Monitor',
+      icon: <BarChart3 className="w-3.5 h-3.5" />,
+      badgeClass: 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-sm shadow-blue-600/30 ring-1 ring-inset ring-white/40'
+    },
+    {
+      id: 'render_queue',
+      label: 'Render Queue',
+      icon: <ListOrdered className="w-3.5 h-3.5" />,
+      badgeClass: 'bg-gradient-to-br from-violet-600 to-purple-700 text-white shadow-sm shadow-purple-600/30 ring-1 ring-inset ring-white/40'
+    },
+    {
+      id: 'activity_logs',
+      label: 'Activity Logs',
+      icon: <ScrollText className="w-3.5 h-3.5" />,
+      badgeClass: 'bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-sm shadow-amber-500/30 ring-1 ring-inset ring-white/40'
+    },
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 h-screen select-none shrink-0 shadow-xs">
-      <div className="space-y-6">
-        {/* Brand Header */}
-        <div className="px-2 pt-1">
-          <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold tracking-wider mb-1.5">
-            WORKER NODE
+    <aside className="w-60 bg-white border-r border-slate-200/80 flex flex-col justify-between p-4 h-screen select-none shrink-0">
+      <div className="space-y-6 overflow-y-auto">
+        {/* Clean Brand Header matching Client Studio */}
+        <div className="flex items-center gap-3 px-1 pt-1">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40">
+            <Zap className="w-4 h-4 fill-current drop-shadow-sm" />
           </div>
-          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
-            <span className="text-emerald-600 text-2xl leading-none">⚡</span> GPU Worker
-          </h1>
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-100">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                daemonOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'
-              }`}
-            />
-            <span className="text-xs font-semibold text-slate-700">
-              {daemonOnline ? 'Daemon Running (:8000)' : 'Daemon Stopped'}
-            </span>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <h1 className="text-base font-extrabold text-slate-900 tracking-tight leading-none">
+                GPUShare
+              </h1>
+              <span
+                className={`text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded border ${
+                  daemonOnline
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-rose-50 text-rose-700 border-rose-200'
+                }`}
+              >
+                WORKER
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 font-medium mt-1 truncate">
+              Dedicated GPU Server
+            </p>
           </div>
         </div>
 
-        {/* Streamlined Navigation */}
-        <nav className="space-y-1">
+        {/* Navigation List with distinct glossy icon badges */}
+        <nav className="space-y-1.5">
           {navItems.map((item) => {
             const isActive = currentView === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] transition-all duration-150 cursor-pointer ${
                   isActive
-                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-blue-600 text-white font-semibold shadow-sm shadow-blue-600/20'
+                    : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 font-medium'
                 }`}
               >
-                {item.icon}
-                <span>{item.label}</span>
+                <span
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                    isActive
+                      ? 'bg-white/20 text-white ring-1 ring-inset ring-white/40 shadow-inner'
+                      : item.badgeClass
+                  }`}
+                >
+                  {item.icon}
+                </span>
+                <span className="truncate">{item.label}</span>
               </button>
             );
           })}
         </nav>
       </div>
 
-      {/* Hardware Status Footer */}
-      <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
-        <div className="flex items-center gap-2">
-          <Cpu className="w-4 h-4 text-emerald-600" />
-          <span className="text-xs font-bold text-slate-800 truncate">{gpuName}</span>
+      {/* Bottom Status Pills */}
+      <div className="space-y-2 pt-3 border-t border-slate-100">
+        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div className="flex items-center gap-2">
+            <span
+              className={`w-2.5 h-2.5 rounded-full shrink-0 shadow-sm ${
+                daemonOnline ? 'bg-emerald-600 animate-pulse shadow-emerald-500/50' : 'bg-rose-600 shadow-rose-500/50'
+              }`}
+            />
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-slate-800 truncate">
+                {daemonOnline ? `Daemon Running (:${workerPort})` : 'Daemon Stopped'}
+              </p>
+              <p className="text-[10px] text-slate-500 font-mono truncate">
+                UDP 8002 Discovery Active
+              </p>
+            </div>
+          </div>
         </div>
-        <p className="text-[11px] text-slate-500 font-mono">Port 8000 • UDP 8002 Active</p>
+
+        <div className="px-3 py-2 rounded-xl border bg-emerald-50/70 border-emerald-200/80 text-emerald-900 flex items-center gap-2">
+          <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <Cpu className="w-3.5 h-3.5" />
+          </span>
+          <span className="text-[11px] font-bold truncate">{gpuName}</span>
+        </div>
       </div>
     </aside>
   );

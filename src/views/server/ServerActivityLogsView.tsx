@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
-import { ScrollText, Trash2, Download, Search, RefreshCw } from 'lucide-react';
+import { ScrollText, Trash2, Download, Search } from 'lucide-react';
 
 export const ServerActivityLogsView: React.FC = () => {
   const eventLogs = useServerNodeStore((s) => s.eventLogs);
@@ -23,41 +23,45 @@ export const ServerActivityLogsView: React.FC = () => {
   };
 
   return (
-    <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] max-w-6xl mx-auto">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <ScrollText className="w-5 h-5 text-emerald-600" />
-            <span>Worker Node Activity & Event Audit Logs</span>
-          </h2>
-          <p className="text-xs text-slate-500">
-            Real-time audit log of client connections, job submissions, and FFmpeg transcoding progress.
-          </p>
+    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
+      <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <ScrollText className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
+              Worker Node Activity & Event Audit Logs
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Real-time audit log of client connections, job submissions, and FFmpeg transcoding progress.
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={clearLogs}
-            className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-all"
+            className="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
           >
-            <Trash2 className="w-3.5 h-3.5 text-slate-500" />
+            <Trash2 className="w-3.5 h-3.5 text-rose-600" />
             <span>Clear Logs</span>
           </button>
 
           <button
             onClick={handleExport}
-            className="px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-all"
+            className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer transition-all"
           >
-            <Download className="w-3.5 h-3.5 text-slate-500" />
+            <Download className="w-3.5 h-3.5 text-white" />
             <span>Export Log (.txt)</span>
           </button>
         </div>
       </div>
 
       {/* Filter and Log Box */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-        <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex items-center gap-2">
-          <Search className="w-4 h-4 text-slate-400" />
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
+        <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex items-center gap-2.5">
+          <Search className="w-4 h-4 text-cyan-700" />
           <input
             type="text"
             value={searchTerm}
@@ -67,9 +71,9 @@ export const ServerActivityLogsView: React.FC = () => {
           />
         </div>
 
-        <div className="p-4 bg-slate-950 font-mono text-xs text-slate-300 h-96 overflow-y-auto space-y-1.5">
+        <div className="p-4 bg-slate-900 font-mono text-xs text-slate-300 h-96 overflow-y-auto space-y-1.5">
           {filteredLogs.length === 0 ? (
-            <p className="text-slate-500 italic">No events recorded matching criteria.</p>
+            <p className="text-slate-400 italic">No events recorded matching criteria.</p>
           ) : (
             filteredLogs.map((log) => (
               <div key={log.id} className="flex items-start gap-2.5">
@@ -82,7 +86,7 @@ export const ServerActivityLogsView: React.FC = () => {
                       ? 'bg-amber-950 text-amber-400 border border-amber-800'
                       : log.level === 'ERROR'
                       ? 'bg-rose-950 text-rose-400 border border-rose-800'
-                      : 'bg-indigo-950 text-indigo-400 border border-indigo-800'
+                      : 'bg-blue-950 text-blue-400 border border-blue-800'
                   }`}
                 >
                   {log.level}
