@@ -13,10 +13,14 @@ import { BenchmarksView } from './views/client/BenchmarksView.js';
 import { SettingsView } from './views/client/SettingsView.js';
 import { DocsView } from './views/client/DocsView.js';
 
-// Server Views (3 Essential Streamlined Views)
+// Server Views (All 7 Views)
 import { ServerOverviewView } from './views/server/ServerOverviewView.js';
 import { ServerRenderQueueView } from './views/server/ServerRenderQueueView.js';
 import { ServerActivityLogsView } from './views/server/ServerActivityLogsView.js';
+import { ServerGPUEngineView } from './views/server/ServerGPUEngineView.js';
+import { ServerNetworkView } from './views/server/ServerNetworkView.js';
+import { ServerSettingsView } from './views/server/ServerSettingsView.js';
+import { ServerDocsView } from './views/server/ServerDocsView.js';
 
 export const App: React.FC = () => {
   const [appMode, setAppMode] = useState<'client' | 'server'>('client');
@@ -72,6 +76,10 @@ export const App: React.FC = () => {
             {serverView === 'server_overview' && <ServerOverviewView />}
             {serverView === 'render_queue' && <ServerRenderQueueView />}
             {serverView === 'activity_logs' && <ServerActivityLogsView />}
+            {serverView === 'gpu_engine' && <ServerGPUEngineView />}
+            {serverView === 'network' && <ServerNetworkView />}
+            {serverView === 'server_settings' && <ServerSettingsView />}
+            {serverView === 'server_docs' && <ServerDocsView />}
           </div>
         </main>
       </div>

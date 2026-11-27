@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookMarked, ChevronDown, ChevronRight, Network, Shield, Cpu, Activity } from 'lucide-react';
+import { BookMarked, ChevronDown, ChevronRight } from 'lucide-react';
 
 export const ServerDocsView: React.FC = () => {
   const [lang, setLang] = useState<'en' | 'ur'>('en');
@@ -45,11 +45,11 @@ export const ServerDocsView: React.FC = () => {
         ? 'Ensure inbound TCP Port 8000 is permitted in Windows Firewall.'
         : 'Windows Firewall mein Port 8000 ko allow karna zaroori hai.',
       points: lang === 'en' ? [
-        'Click the "Windows Firewall" button in the Server Topbar to auto-execute elevated rule.',
+        'Click the "Unblock Firewall" button in the Server Topbar to auto-execute elevated rule.',
         'Or run in elevated PowerShell: netsh advfirewall firewall add rule name="GPUShare_Server" dir=in action=allow protocol=TCP localport=8000',
-        'If client shows "Server Offline", check that the network profile is set to Private.'
+        'If client shows "Worker Offline", check that the network profile is set to Private.'
       ] : [
-        'Server Topbar mein "Windows Firewall" button dabayein taake automatic rule ban jaye.',
+        'Server Topbar mein "Unblock Firewall" button dabayein taake automatic rule ban jaye.',
         'Ya PowerShell Administrator mein netsh advfirewall rule add karein.',
         'Agar client connect na ho to check karein ke network profile Private par ho.'
       ]
@@ -73,33 +73,37 @@ export const ServerDocsView: React.FC = () => {
   ];
 
   return (
-    <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] max-w-5xl">
+    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       {/* Header */}
-      <div className="clay-card p-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
-            <BookMarked className="w-5 h-5 text-brand-blue" />
-            <span>Worker Server Administrator Manual & Direct Cable Setup</span>
-          </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Comprehensive setup documentation for network engineers and video editors.
-          </p>
+      <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <BookMarked className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
+              Worker Server Administrator Manual & Direct Cable Setup
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Comprehensive setup documentation for network engineers and video editors.
+            </p>
+          </div>
         </div>
 
         {/* Bilingual Switcher */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-surface-950 border border-surface-border">
+        <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 border border-slate-200/80">
           <button
             onClick={() => setLang('en')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              lang === 'en' ? 'bg-brand-blue text-white shadow-claySm' : 'text-slate-400 hover:text-white'
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              lang === 'en' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             🇬🇧 English
           </button>
           <button
             onClick={() => setLang('ur')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              lang === 'ur' ? 'bg-brand-blue text-white shadow-claySm' : 'text-slate-400 hover:text-white'
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              lang === 'ur' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             🇵🇰 Roman Urdu
@@ -112,27 +116,27 @@ export const ServerDocsView: React.FC = () => {
         {topics.map((t) => {
           const isOpen = openTopic === t.id;
           return (
-            <div key={t.id} className="clay-card overflow-hidden border border-surface-border/60">
+            <div key={t.id} className="bg-white overflow-hidden rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
               <button
                 onClick={() => setOpenTopic(isOpen ? '' : t.id)}
-                className="w-full p-5 text-left flex items-center justify-between hover:bg-surface-800/40 transition-colors"
+                className="w-full p-4 text-left flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer"
               >
-                <div className="flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-brand-blue"></span>
-                  <h3 className="text-sm font-bold text-white tracking-tight">{t.title}</h3>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+                  <h3 className="text-sm font-bold text-slate-900 tracking-tight">{t.title}</h3>
                 </div>
-                {isOpen ? <ChevronDown className="w-4 h-4 text-brand-blue" /> : <ChevronRight className="w-4 h-4 text-slate-500" />}
+                {isOpen ? <ChevronDown className="w-4 h-4 text-blue-600" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
               </button>
 
               {isOpen && (
-                <div className="px-6 pb-6 pt-2 space-y-4 text-xs text-slate-300 border-t border-surface-border/40">
-                  <p className="bg-surface-800/40 p-3.5 rounded-xl border border-surface-border/40 font-medium text-slate-200">
+                <div className="px-5 pb-5 pt-2 space-y-3 text-xs text-slate-600 border-t border-slate-100">
+                  <p className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 font-medium text-slate-700">
                     {t.summary}
                   </p>
-                  <ul className="space-y-2 pl-2">
+                  <ul className="space-y-1.5 pl-1">
                     {t.points.map((pt, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-blue mt-1.5 shrink-0" />
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-blue-600 font-bold">•</span>
                         <span>{pt}</span>
                       </li>
                     ))}

@@ -4,14 +4,21 @@ import {
   ListOrdered, 
   ScrollText, 
   Cpu,
-  Zap
+  Zap,
+  Network,
+  Settings,
+  BookOpen
 } from 'lucide-react';
 import { useServerNodeStore } from '../../store/useServerNodeStore.js';
 
 export type ServerNavView =
   | 'server_overview'
   | 'render_queue'
-  | 'activity_logs';
+  | 'activity_logs'
+  | 'gpu_engine'
+  | 'network'
+  | 'server_settings'
+  | 'server_docs';
 
 interface ServerSidebarProps {
   currentView: ServerNavView;
@@ -26,7 +33,7 @@ export const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentView, onNav
   const navItems: Array<{ id: ServerNavView; label: string; icon: React.ReactNode; badgeClass: string }> = [
     {
       id: 'server_overview',
-      label: 'Overview & Monitor',
+      label: 'Overview',
       icon: <BarChart3 className="w-3.5 h-3.5" />,
       badgeClass: 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-sm shadow-blue-600/30 ring-1 ring-inset ring-white/40'
     },
@@ -41,6 +48,30 @@ export const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentView, onNav
       label: 'Activity Logs',
       icon: <ScrollText className="w-3.5 h-3.5" />,
       badgeClass: 'bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-sm shadow-amber-500/30 ring-1 ring-inset ring-white/40'
+    },
+    {
+      id: 'gpu_engine',
+      label: 'GPU & Engine',
+      icon: <Cpu className="w-3.5 h-3.5" />,
+      badgeClass: 'bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-sm shadow-rose-600/30 ring-1 ring-inset ring-white/40'
+    },
+    {
+      id: 'network',
+      label: 'Network',
+      icon: <Network className="w-3.5 h-3.5" />,
+      badgeClass: 'bg-gradient-to-br from-cyan-600 to-teal-700 text-white shadow-sm shadow-cyan-600/30 ring-1 ring-inset ring-white/40'
+    },
+    {
+      id: 'server_settings',
+      label: 'Settings',
+      icon: <Settings className="w-3.5 h-3.5" />,
+      badgeClass: 'bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-sm shadow-slate-700/30 ring-1 ring-inset ring-white/30'
+    },
+    {
+      id: 'server_docs',
+      label: 'Docs & Guide',
+      icon: <BookOpen className="w-3.5 h-3.5" />,
+      badgeClass: 'bg-gradient-to-br from-emerald-600 to-green-700 text-white shadow-sm shadow-emerald-600/30 ring-1 ring-inset ring-white/40'
     },
   ];
 
