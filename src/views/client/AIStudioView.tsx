@@ -71,11 +71,11 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
           onClick={() => setActiveTab('cnn')}
           className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'cnn'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-blue-700 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <BrainCircuit className="w-4 h-4" />
+          <BrainCircuit className="w-4 h-4 text-cyan-700" />
           <span>Remote CNN Training</span>
         </button>
 
@@ -83,11 +83,11 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
           onClick={() => setActiveTab('lens')}
           className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'lens'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-blue-700 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Search className="w-4 h-4" />
+          <Search className="w-4 h-4 text-fuchsia-700" />
           <span>Visual Object Classifier</span>
         </button>
 
@@ -95,11 +95,11 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
           onClick={() => setActiveTab('custom')}
           className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'custom'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-blue-700 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <FileCode className="w-4 h-4" />
+          <FileCode className="w-4 h-4 text-indigo-700" />
           <span>Custom Python Runner</span>
         </button>
 
@@ -107,11 +107,11 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
           onClick={() => setActiveTab('benchmark')}
           className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'benchmark'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-blue-700 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Zap className="w-4 h-4" />
+          <Zap className="w-4 h-4 text-amber-600" />
           <span>CPU vs GPU Suite</span>
         </button>
       </div>
@@ -128,7 +128,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-blue-700 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-blue-600" />
+                    <Sparkles className="w-4 h-4 text-violet-700" />
                     {datasetName}
                   </span>
                   <span className="text-xs font-mono font-bold text-blue-900">{totalDatasetImages.toLocaleString()} Tensors</span>
@@ -274,7 +274,9 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-5">
             <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-              <Camera className="w-4 h-4 text-blue-600" />
+              <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
+                <Camera className="w-3.5 h-3.5" />
+              </span>
               <span>Camera Viewfinder & Image Input</span>
             </h3>
 
@@ -469,7 +471,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
 
               <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center font-bold">
                     <Award className="w-5 h-5" />
                   </div>
                   <div>

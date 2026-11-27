@@ -53,16 +53,16 @@ export const ClientTopbar: React.FC<ClientTopbarProps> = ({ pageTitle, onNavigat
         >
           {isConnected ? (
             <>
-              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <Wifi className="w-3.5 h-3.5" />
+              <span className="w-2 h-2 rounded-full bg-emerald-600 shadow-sm shadow-emerald-500/50"></span>
+              <Wifi className="w-3.5 h-3.5 text-emerald-700" />
               <span className="font-mono text-[11px]">
                 {serverIp}:{serverPort} ({latencyMs.toFixed(1)} ms)
               </span>
             </>
           ) : (
             <>
-              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-              <WifiOff className="w-3.5 h-3.5 text-slate-400" />
+              <span className="w-2 h-2 rounded-full bg-rose-600 shadow-sm shadow-rose-500/50"></span>
+              <WifiOff className="w-3.5 h-3.5 text-rose-600" />
               <span>Worker Offline • Retry</span>
             </>
           )}

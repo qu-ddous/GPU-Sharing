@@ -68,8 +68,10 @@ export const SettingsView: React.FC = () => {
 
       {/* Network Connection Settings Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-          <Settings className="w-4 h-4 text-blue-600" />
+        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2.5">
+          <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-sm ring-1 ring-inset ring-white/30 flex items-center justify-center">
+            <Settings className="w-3.5 h-3.5" />
+          </span>
           <span>Worker Node Connection Parameters</span>
         </h3>
 
@@ -99,7 +101,7 @@ export const SettingsView: React.FC = () => {
 
         <div className="space-y-1.5 pt-1">
           <label className="text-[11px] font-bold text-slate-500 uppercase flex items-center gap-1.5">
-            <Key className="w-3.5 h-3.5 text-slate-400" />
+            <Key className="w-3.5 h-3.5 text-amber-600" />
             <span>Node Authentication Token (Optional)</span>
           </label>
           <input
@@ -116,8 +118,10 @@ export const SettingsView: React.FC = () => {
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-              <FolderCheck className="w-4 h-4 text-emerald-600" />
+            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2.5">
+              <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
+                <FolderCheck className="w-3.5 h-3.5" />
+              </span>
               <span>Automated Watch Folder (Daemon Mode)</span>
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">

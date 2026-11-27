@@ -111,13 +111,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* 4 Hardware Stat Cards (Pastel Corner Icon Badges matching reference) */}
+      {/* 4 Hardware Stat Cards (Glossy Rich Corner Icon Badges) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* CPU Load */}
         <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] relative overflow-hidden flex flex-col justify-between gap-3">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">CPU LOAD</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
               <Cpu className="w-4 h-4" />
             </div>
           </div>
@@ -140,7 +140,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] relative overflow-hidden flex flex-col justify-between gap-3">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">RAM ALLOCATION</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
               <HardDrive className="w-4 h-4" />
             </div>
           </div>
@@ -163,7 +163,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] relative overflow-hidden flex flex-col justify-between gap-3">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">GPU ENGINE</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
               <Gauge className="w-4 h-4" />
             </div>
           </div>
@@ -192,7 +192,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] relative overflow-hidden flex flex-col justify-between gap-3">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">DEDICATED VRAM</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
               <Layers className="w-4 h-4" />
             </div>
           </div>
@@ -214,11 +214,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Worker Node Connection & LAN Discovery Card (matching Connected LAN Computers card) */}
+      {/* Worker Node Connection & LAN Discovery Card */}
       <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-700 text-white shadow-md shadow-cyan-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
               <Radio className="w-4 h-4" />
             </div>
             <div>
@@ -232,11 +232,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
               onClick={() => setShowIpHelp(!showIpHelp)}
               className={`px-3 py-1.5 text-xs font-semibold rounded-xl border flex items-center gap-1.5 transition-all cursor-pointer ${
                 showIpHelp
-                  ? 'bg-blue-50 border-blue-200 text-blue-700'
-                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                  ? 'bg-violet-50 border-violet-200 text-violet-700'
+                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
               }`}
             >
-              <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+              <HelpCircle className="w-3.5 h-3.5 text-violet-700" />
               <span>How to find IP?</span>
             </button>
 
@@ -245,7 +245,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
               disabled={isScanning}
               className="bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-1.5 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
             >
-              <Search className={`w-3.5 h-3.5 ${isScanning ? 'animate-spin' : ''}`} />
+              <Search className={`w-3.5 h-3.5 text-cyan-300 ${isScanning ? 'animate-spin' : ''}`} />
               <span>{isScanning ? 'Scanning UDP...' : 'Auto-Discover'}</span>
             </button>
           </div>

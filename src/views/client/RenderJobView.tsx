@@ -151,11 +151,11 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
           onClick={() => setProfile('video')}
           className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             profile === 'video'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-blue-700 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Film className="w-4 h-4" />
+          <Film className="w-4 h-4 text-violet-700" />
           <span>Video Transcode (NVENC)</span>
         </button>
 
@@ -164,11 +164,11 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
           onClick={() => setProfile('batch')}
           className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             profile === 'batch'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-blue-700 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Terminal className="w-4 h-4" />
+          <Terminal className="w-4 h-4 text-amber-600" />
           <span>Batch & Shell Automation</span>
         </button>
 
@@ -177,11 +177,11 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
           onClick={() => setProfile('universal')}
           className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             profile === 'universal'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-blue-700 shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <FolderArchive className="w-4 h-4" />
+          <FolderArchive className="w-4 h-4 text-cyan-700" />
           <span>Universal Folder Runner</span>
         </button>
       </div>
@@ -195,7 +195,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
               <p className="text-xs text-slate-500">Pick a source video, batch script, or complete project workspace.</p>
             </div>
             <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
               Direct 2.5 Gbps P2P Pipeline
             </span>
           </div>
@@ -204,7 +204,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
             onClick={profile === 'universal' ? handleBrowseFolder : handleBrowseFile}
             className="p-7 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 hover:bg-slate-50 hover:border-blue-400 transition-all flex flex-col items-center justify-center text-center space-y-3 cursor-pointer"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
               {profile === 'universal' ? <FolderArchive className="w-6 h-6" /> : <FileVideo className="w-6 h-6" />}
             </div>
             <div>
@@ -236,8 +236,10 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
         {/* Video Encoder Parameters Card */}
         {profile === 'video' && (
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-5">
-            <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-blue-600" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-sm shadow-indigo-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+                <Sliders className="w-3.5 h-3.5" />
+              </div>
               <h3 className="text-sm font-bold text-slate-900">Hardware Transcode Settings (NVENC)</h3>
             </div>
 

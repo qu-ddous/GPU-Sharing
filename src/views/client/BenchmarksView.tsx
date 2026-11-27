@@ -66,14 +66,18 @@ export const BenchmarksView: React.FC = () => {
     <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       {/* Header Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <Zap className="w-5 h-5 text-blue-600" />
-            <span>Hardware Speedup Benchmark Suite</span>
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Automated 5-step test comparing local laptop CPU performance vs remote desktop NVIDIA RTX GPU acceleration.
-          </p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <Zap className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
+              Hardware Speedup Benchmark Suite
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Automated 5-step test comparing local laptop CPU performance vs remote desktop NVIDIA RTX GPU acceleration.
+            </p>
+          </div>
         </div>
 
         <button
@@ -136,17 +140,21 @@ export const BenchmarksView: React.FC = () => {
                 }`}
               >
                 <div className="flex items-center gap-3.5">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-sm ring-1 ring-inset ring-white/40 ${
                     isRunningStep
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white'
                       : isCompleted
-                      ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                      ? step.id === 1 ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white'
+                      : step.id === 2 ? 'bg-gradient-to-br from-purple-600 to-fuchsia-700 text-white'
+                      : step.id === 3 ? 'bg-gradient-to-br from-cyan-600 to-teal-700 text-white'
+                      : step.id === 4 ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-white'
+                      : 'bg-gradient-to-br from-emerald-600 to-green-700 text-white'
                       : 'bg-slate-200 text-slate-500'
                   }`}>
                     {isRunningStep ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : isCompleted ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <CheckCircle2 className="w-4 h-4 text-white" />
                     ) : (
                       step.id
                     )}

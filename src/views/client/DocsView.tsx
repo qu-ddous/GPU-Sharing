@@ -16,12 +16,16 @@ export const DocsView: React.FC = () => {
     <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       {/* Header with Bilingual Switcher */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-blue-600" />
-            <span>{currentDocs.title}</span>
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">{currentDocs.subtitle}</p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
+              {currentDocs.title}
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">{currentDocs.subtitle}</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 border border-slate-200/80">

@@ -42,7 +42,7 @@ export const ActiveJobView: React.FC = () => {
   if (!activeJob) {
     return (
       <div className="p-12 flex flex-col items-center justify-center text-center space-y-3 h-[calc(100vh-3.5rem)] bg-[#F8FAFC] text-slate-900 font-sans">
-        <div className="w-14 h-14 rounded-2xl bg-white text-slate-400 flex items-center justify-center border border-slate-200/80 shadow-xs">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-lg shadow-rose-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
           <Radio className="w-7 h-7" />
         </div>
         <h3 className="text-base font-bold text-slate-900">No Active Workload Running</h3>
@@ -132,8 +132,8 @@ export const ActiveJobView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Encode Speed</span>
-            <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5" />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Zap className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">{currentFps} <span className="text-xs font-normal text-slate-400">FPS</span></p>
@@ -143,8 +143,8 @@ export const ActiveJobView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Elapsed Time</span>
-            <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-              <Clock className="w-3.5 h-3.5" />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Clock className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">{formatTime(elapsedSeconds)}</p>
@@ -154,8 +154,8 @@ export const ActiveJobView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Remote GPU</span>
-            <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-              <Cpu className="w-3.5 h-3.5" />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-600 to-violet-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Cpu className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">{remoteGpuPercent}%</p>
@@ -165,8 +165,8 @@ export const ActiveJobView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Laptop Load</span>
-            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <HardDrive className="w-3.5 h-3.5" />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <HardDrive className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-emerald-600 font-mono">0.0%</p>
@@ -178,14 +178,14 @@ export const ActiveJobView: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
         <div className="px-5 py-3 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-slate-600" />
+            <Terminal className="w-4 h-4 text-cyan-700" />
             <span className="text-xs font-bold text-slate-800">Remote Worker Console Stream</span>
           </div>
           <button
             onClick={clearLogs}
-            className="text-[11px] font-semibold text-slate-500 hover:text-slate-900 flex items-center gap-1 transition-colors cursor-pointer"
+            className="text-[11px] font-semibold text-slate-600 hover:text-rose-700 flex items-center gap-1 transition-colors cursor-pointer"
           >
-            <RotateCcw className="w-3 h-3" />
+            <RotateCcw className="w-3 h-3 text-rose-600" />
             <span>Clear Buffer</span>
           </button>
         </div>
