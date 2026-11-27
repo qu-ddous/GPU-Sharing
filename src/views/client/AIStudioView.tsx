@@ -64,7 +64,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] max-w-5xl mx-auto text-slate-900 font-sans">
+    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       {/* 4 Clean Sub-Tabs */}
       <div className="bg-slate-100/80 p-1 rounded-xl grid grid-cols-4 gap-1 border border-slate-200/80">
         <button

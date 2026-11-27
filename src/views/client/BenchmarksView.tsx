@@ -63,7 +63,7 @@ export const BenchmarksView: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] max-w-5xl mx-auto text-slate-900 font-sans">
+    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       {/* Header Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
         <div>

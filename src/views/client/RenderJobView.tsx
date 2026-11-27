@@ -136,7 +136,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
   };
 
   return (
-    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] max-w-5xl mx-auto text-slate-900 font-sans">
+    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       <input
         ref={fileInputRef}
         type="file"

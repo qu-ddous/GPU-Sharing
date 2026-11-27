@@ -51,7 +51,7 @@ export const SettingsView: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] max-w-4xl mx-auto text-slate-900 font-sans">
+    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">Host Connection & Studio Settings</h2>
