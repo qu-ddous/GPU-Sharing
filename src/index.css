@@ -4,120 +4,53 @@
 
 @layer base {
   body {
-    @apply bg-[#1d232c] text-[#eeeeee] font-sans antialiased;
+    @apply bg-[#F8FAFC] text-slate-900 font-sans antialiased;
     font-family: 'Nunito Sans', system-ui, -apple-system, sans-serif;
   }
 
   ::selection {
-    background-color: #b8eef0;
-    color: #1d232c;
-    text-shadow: 0 0 12px #00adb5;
+    background-color: #DBEAFE;
+    color: #1E3A8A;
   }
 }
 
-/* ─── Liquid Glass Material Classes ─────────────────────────── */
-.liquid-glass {
-  background: rgba(34, 40, 49, 0.78);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+/* ─── Clean Light Desktop UI Utilities ───────────────────────── */
+.clean-card {
+  @apply bg-white border border-slate-200/80 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.03)];
 }
 
-.liquid-glass-card {
-  background: rgba(34, 40, 49, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #303640;
-  border-radius: 12px;
-  box-shadow: 0 8px 28px 0 rgba(0, 0, 0, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+.clean-card-muted {
+  @apply bg-slate-50/80 border border-slate-200/80 rounded-xl;
 }
 
-.liquid-glass-pill {
-  background: rgba(34, 40, 49, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid #303640;
-  border-radius: 9999px;
-  transition: all 180ms ease;
+.clean-btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-semibold rounded-xl shadow-sm transition-all duration-150;
 }
 
-.liquid-glass-pill:hover {
-  border-color: #00adb5;
-  box-shadow: 0 0 16px rgba(0, 173, 181, 0.3);
+.clean-btn-emerald {
+  @apply bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold rounded-xl shadow-sm transition-all duration-150;
 }
 
-.liquid-btn-primary {
-  background: #00adb5;
-  color: #1d232c;
-  font-weight: 700;
-  border-radius: 9999px;
-  box-shadow: 0 4px 14px rgba(0, 173, 181, 0.35);
-  transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+.clean-btn-dark {
+  @apply bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white font-semibold rounded-xl shadow-sm transition-all duration-150;
 }
 
-.liquid-btn-primary:hover {
-  background: #b8eef0;
-  box-shadow: 0 6px 20px rgba(0, 173, 181, 0.55);
-  transform: translateY(-1px);
+.clean-btn-secondary {
+  @apply bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-700 border border-slate-200 font-semibold rounded-xl shadow-sm transition-all duration-150;
 }
 
-.liquid-btn-primary:active {
-  transform: translateY(0);
-}
-
-.liquid-btn-secondary {
-  background: rgba(34, 40, 49, 0.85);
-  color: #eeeeee;
-  border: 1px solid #303640;
-  font-weight: 600;
-  border-radius: 9999px;
-  backdrop-filter: blur(12px);
-  transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.liquid-btn-secondary:hover {
-  border-color: #00adb5;
-  color: #00adb5;
-  box-shadow: 0 0 14px rgba(0, 173, 181, 0.25);
-}
-
-/* Backward compatibility for clean cards & buttons */
-.clay-card {
-  @apply liquid-glass-card;
-}
-
-.clay-card-secondary {
-  background: rgba(29, 35, 44, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid #303640;
-  border-radius: 8px;
-}
-
-.clay-button-primary {
-  @apply liquid-btn-primary;
-}
-
-.clay-button-secondary {
-  @apply liquid-btn-secondary;
-}
-
-.clay-badge {
-  @apply px-2.5 py-1 text-xs font-semibold rounded-full border border-[#303640] bg-[#222831] text-[#b8eef0];
-}
-
-/* Custom Scrollbar - Noir Teal */
+/* Custom Light Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #1d232c;
+  background: #F8FAFC;
 }
 ::-webkit-scrollbar-thumb {
-  background: #303640;
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #00adb5;
+  background: #94A3B8;
 }

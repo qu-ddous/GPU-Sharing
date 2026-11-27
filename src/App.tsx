@@ -82,10 +82,10 @@ export const App: React.FC = () => {
   // 💻 CLIENT STUDIO APPLICATION (User's Laptop)
   // -------------------------------------------------------------
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-gradient-to-br from-[#1d232c] via-[#222831] to-[#15181e] font-sans text-[#eeeeee]">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#F8FAFC] font-sans text-slate-900">
       <ClientSidebar currentView={clientView} onNavigate={setClientView} />
 
-      <main className="flex-1 flex flex-col min-w-0 bg-transparent">
+      <main className="flex-1 flex flex-col min-w-0 bg-[#F8FAFC]">
         <ClientTopbar 
           pageTitle={getClientPageTitle()} 
           onNavigateToJob={() => setClientView('active_job')} 

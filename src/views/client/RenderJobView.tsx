@@ -8,8 +8,7 @@ import {
   FileVideo, 
   Sliders, 
   ArrowRight,
-  ShieldCheck,
-  CheckCircle2
+  ShieldCheck
 } from 'lucide-react';
 import type { ResolutionPreset, NvencPreset } from '../../types/index.js';
 
@@ -21,10 +20,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
   const submitNewJob = useJobStore((s) => s.submitNewJob);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Profile Selector
   const [profile, setProfile] = useState<'video' | 'batch' | 'universal'>('video');
-
-  // Form State
   const [selectedFile, setSelectedFile] = useState<{ name: string; size: string; path: string; checksum?: string; fileObj?: File } | null>(null);
 
   const [resolution, setResolution] = useState<ResolutionPreset>('1080p');
@@ -140,8 +136,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
   };
 
   return (
-    <div className="p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] max-w-6xl mx-auto text-[#eeeeee] font-sans">
-      {/* Hidden File Input */}
+    <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] max-w-5xl mx-auto text-slate-900 font-sans">
       <input
         ref={fileInputRef}
         type="file"
@@ -149,28 +144,28 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
         onChange={handleStandardFileInput}
       />
 
-      {/* Profile Selector Tabs (Liquid Glass Capsule) */}
-      <div className="bg-[#222831]/85 backdrop-blur-xl p-1.5 rounded-full grid grid-cols-3 gap-1.5 border border-[#303640]">
+      {/* Clean Profile Selector Tabs */}
+      <div className="bg-slate-100/80 p-1 rounded-xl grid grid-cols-3 gap-1 border border-slate-200/80">
         <button
           type="button"
           onClick={() => setProfile('video')}
-          className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all duration-180 cursor-pointer ${
+          className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             profile === 'video'
-              ? 'bg-[#00adb5] text-[#1d232c] shadow-[0_0_16px_rgba(0,173,181,0.45)]'
-              : 'text-[#eeeeee]/70 hover:text-[#00adb5] hover:bg-[#303640]/50'
+              ? 'bg-white text-blue-600 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <Film className="w-4 h-4" />
-          <span>Video Transcode (GPU NVENC)</span>
+          <span>Video Transcode (NVENC)</span>
         </button>
 
         <button
           type="button"
           onClick={() => setProfile('batch')}
-          className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all duration-180 cursor-pointer ${
+          className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             profile === 'batch'
-              ? 'bg-[#00adb5] text-[#1d232c] shadow-[0_0_16px_rgba(0,173,181,0.45)]'
-              : 'text-[#eeeeee]/70 hover:text-[#00adb5] hover:bg-[#303640]/50'
+              ? 'bg-white text-blue-600 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <Terminal className="w-4 h-4" />
@@ -180,61 +175,59 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
         <button
           type="button"
           onClick={() => setProfile('universal')}
-          className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all duration-180 cursor-pointer ${
+          className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             profile === 'universal'
-              ? 'bg-[#00adb5] text-[#1d232c] shadow-[0_0_16px_rgba(0,173,181,0.45)]'
-              : 'text-[#eeeeee]/70 hover:text-[#00adb5] hover:bg-[#303640]/50'
+              ? 'bg-white text-blue-600 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <FolderArchive className="w-4 h-4" />
-          <span>Universal Folder & Command Runner</span>
+          <span>Universal Folder Runner</span>
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Source File / Folder Selection Card */}
-        <div className="bg-[#222831]/80 backdrop-blur-xl p-6 rounded-2xl border border-[#303640] shadow-glass space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Source Selection Card */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-[#eeeeee]">Workload Source Selection</h3>
-              <p className="text-xs text-[#b8eef0]/70">Pick a source video, batch script, or complete project workspace.</p>
+              <h3 className="text-sm font-bold text-slate-900">Workload Source Selection</h3>
+              <p className="text-xs text-slate-500">Pick a source video, batch script, or complete project workspace.</p>
             </div>
-            <span className="text-[11px] font-semibold text-[#00adb5] bg-[#00adb5]/15 border border-[#00adb5]/30 px-3 py-1 rounded-full flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#00adb5]" />
+            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
               Direct 2.5 Gbps P2P Pipeline
             </span>
           </div>
 
           <div
             onClick={profile === 'universal' ? handleBrowseFolder : handleBrowseFile}
-            className="p-6 rounded-xl border border-dashed border-[#00adb5]/40 bg-[#1d232c]/70 hover:bg-[#1d232c] transition-all flex flex-col items-center justify-center text-center space-y-3 cursor-pointer group"
+            className="p-7 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 hover:bg-slate-50 hover:border-blue-400 transition-all flex flex-col items-center justify-center text-center space-y-3 cursor-pointer"
           >
-            <div className="w-12 h-12 rounded-2xl bg-[#00adb5]/15 border border-[#00adb5]/30 text-[#00adb5] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center">
               {profile === 'universal' ? <FolderArchive className="w-6 h-6" /> : <FileVideo className="w-6 h-6" />}
             </div>
             <div>
-              <p className="text-sm font-bold text-[#eeeeee]">
-                {selectedFile ? selectedFile.name : 'Click to Browse File / Folder from Laptop'}
+              <p className="text-sm font-bold text-slate-900">
+                {selectedFile ? selectedFile.name : 'Click to Browse File or Folder from Laptop'}
               </p>
-              <p className="text-xs text-[#b8eef0]/70 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 {selectedFile ? `${selectedFile.size} • ${selectedFile.path}` : 'Supported: MP4, MOV, MKV, BAT, PS1, PY, or Project Folders'}
               </p>
             </div>
 
-            <div className="flex items-center gap-3 pt-1">
-              <button
-                type="button"
-                className="bg-[#00adb5] hover:bg-[#b8eef0] text-[#1d232c] text-xs font-bold px-5 py-2 rounded-full shadow-[0_0_14px_rgba(0,173,181,0.35)] transition-all flex items-center gap-2 cursor-pointer pointer-events-none"
-              >
-                <UploadCloud className="w-4 h-4" />
-                <span>{selectedFile ? 'Change Selection' : 'Browse File'}</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs transition-all flex items-center gap-2 pointer-events-none"
+            >
+              <UploadCloud className="w-4 h-4" />
+              <span>{selectedFile ? 'Change Selection' : 'Browse File'}</span>
+            </button>
 
             {selectedFile?.checksum && (
-              <div className="w-full max-w-lg mt-2 p-2 rounded-lg bg-[#15181e] border border-[#303640] text-left">
-                <span className="text-[10px] font-bold text-[#00adb5] uppercase tracking-wider block">Integrity SHA-256:</span>
-                <span className="text-[11px] font-mono text-[#b8eef0] break-all">{selectedFile.checksum}</span>
+              <div className="w-full max-w-lg mt-2 p-2.5 rounded-lg bg-white border border-slate-200 text-left">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Integrity SHA-256:</span>
+                <span className="text-[11px] font-mono text-slate-600 break-all">{selectedFile.checksum}</span>
               </div>
             )}
           </div>
@@ -242,20 +235,19 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
 
         {/* Video Encoder Parameters Card */}
         {profile === 'video' && (
-          <div className="bg-[#222831]/80 backdrop-blur-xl p-6 rounded-2xl border border-[#303640] shadow-glass space-y-5">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-5">
             <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-[#00adb5]" />
-              <h3 className="text-sm font-bold text-[#eeeeee]">Hardware Transcode Settings (NVENC)</h3>
+              <Sliders className="w-4 h-4 text-blue-600" />
+              <h3 className="text-sm font-bold text-slate-900">Hardware Transcode Settings (NVENC)</h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {/* Target Resolution */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#b8eef0]/80 uppercase tracking-wider">Output Resolution</label>
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Output Resolution</label>
                 <select
                   value={resolution}
                   onChange={(e) => setResolution(e.target.value as ResolutionPreset)}
-                  className="w-full bg-[#1d232c] border border-[#303640] rounded-xl px-3.5 py-2.5 text-xs font-medium text-[#eeeeee] focus:outline-none focus:border-[#00adb5]"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15"
                 >
                   <option value="Original">Keep Original Source</option>
                   <option value="4K">4K UHD (3840 x 2160)</option>
@@ -265,13 +257,12 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
                 </select>
               </div>
 
-              {/* Bitrate Control */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#b8eef0]/80 uppercase tracking-wider">Target Bitrate</label>
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Target Bitrate</label>
                 <select
                   value={bitrate}
                   onChange={(e) => setBitrate(e.target.value as any)}
-                  className="w-full bg-[#1d232c] border border-[#303640] rounded-xl px-3.5 py-2.5 text-xs font-medium text-[#eeeeee] focus:outline-none focus:border-[#00adb5]"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15"
                 >
                   <option value="2M">2.0 Mbps (Web Small)</option>
                   <option value="5M">5.0 Mbps (Standard HD)</option>
@@ -281,13 +272,12 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
                 </select>
               </div>
 
-              {/* NVENC Tuning Preset */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#b8eef0]/80 uppercase tracking-wider">NVENC Preset</label>
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">NVENC Preset</label>
                 <select
                   value={preset}
                   onChange={(e) => setPreset(e.target.value as NvencPreset)}
-                  className="w-full bg-[#1d232c] border border-[#303640] rounded-xl px-3.5 py-2.5 text-xs font-medium text-[#eeeeee] focus:outline-none focus:border-[#00adb5]"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15"
                 >
                   <option value="p1">p1: Fastest (Low Latency Stream)</option>
                   <option value="p3">p3: Fast Balanced</option>
@@ -297,11 +287,10 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
               </div>
             </div>
 
-            {/* Checkbox for CPU Fallback */}
-            <div className="pt-2 border-t border-[#303640] flex items-center justify-between">
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-[#eeeeee]">Multi-Stage Autonomous Fallback Loop</p>
-                <p className="text-[11px] text-[#b8eef0]/70">
+                <p className="text-xs font-bold text-slate-800">Multi-Stage Autonomous Fallback Loop</p>
+                <p className="text-[11px] text-slate-500">
                   Automatically cascade to Intel QSV, AMD AMF, or multi-core CPU libx264 if remote NVENC is busy.
                 </p>
               </div>
@@ -312,7 +301,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
                   onChange={(e) => setAllowCpuFallback(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-[#303640] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#eeeeee] after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00adb5]"></div>
+                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
             </div>
           </div>
@@ -320,46 +309,46 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
 
         {/* Universal Command Runner Card */}
         {profile === 'universal' && (
-          <div className="bg-[#222831]/80 backdrop-blur-xl p-6 rounded-2xl border border-[#303640] shadow-glass space-y-4">
-            <h3 className="text-sm font-bold text-[#eeeeee]">Custom Remote Command Execution</h3>
-            <p className="text-xs text-[#b8eef0]/70">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
+            <h3 className="text-sm font-bold text-slate-900">Custom Remote Command Execution</h3>
+            <p className="text-xs text-slate-500">
               The project folder will be extracted to an isolated workspace on the worker node and executed in Windows CMD.
             </p>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#b8eef0]/80 uppercase tracking-wider">Terminal Execution Command</label>
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Terminal Execution Command</label>
               <input
                 type="text"
                 value={customCommand}
                 onChange={(e) => setCustomCommand(e.target.value)}
                 placeholder="e.g. python main.py or npm run build or blender -b scene.blend -a"
-                className="w-full bg-[#1d232c] border border-[#303640] rounded-xl px-3.5 py-2.5 text-xs font-mono font-medium text-[#00adb5] focus:outline-none focus:border-[#00adb5]"
+                className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono font-medium text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15"
               />
             </div>
           </div>
         )}
 
         {/* Output Destination Card */}
-        <div className="bg-[#222831]/80 backdrop-blur-xl p-6 rounded-2xl border border-[#303640] shadow-glass space-y-4">
-          <h3 className="text-sm font-bold text-[#eeeeee]">Output Delivery & Filename</h3>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
+          <h3 className="text-sm font-bold text-slate-900">Output Delivery & Filename</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#b8eef0]/80 uppercase tracking-wider">Output File Name</label>
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Output File Name</label>
               <input
                 type="text"
                 value={outputFilename}
                 onChange={(e) => setOutputFilename(e.target.value)}
-                className="w-full bg-[#1d232c] border border-[#303640] rounded-xl px-3.5 py-2.5 text-xs font-medium text-[#eeeeee] focus:outline-none focus:border-[#00adb5]"
+                className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#b8eef0]/80 uppercase tracking-wider">Local Download Destination</label>
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Local Download Destination</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   readOnly
                   value={outputFolder}
-                  className="flex-1 bg-[#1d232c] border border-[#303640] rounded-xl px-3.5 py-2.5 text-xs text-[#b8eef0] font-mono"
+                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-600 font-mono"
                 />
                 <button
                   type="button"
@@ -369,7 +358,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
                       if (dir) setOutputFolder(dir);
                     }
                   }}
-                  className="bg-[#303640] hover:bg-[#00adb5] hover:text-[#1d232c] text-[#eeeeee] font-bold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer"
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer"
                 >
                   Change
                 </button>
@@ -378,21 +367,21 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
           </div>
         </div>
 
-        {/* Submit Button (Pill Capsule) */}
-        <div className="flex items-center justify-end gap-3 pt-2">
+        {/* Submit Button */}
+        <div className="flex items-center justify-end gap-3 pt-1">
           <button
             type="submit"
             disabled={!selectedFile || isSubmitting}
-            className="bg-[#00adb5] hover:bg-[#b8eef0] active:scale-[0.98] disabled:opacity-40 text-[#1d232c] font-bold text-sm px-8 py-3 rounded-full shadow-[0_0_24px_rgba(0,173,181,0.45)] transition-all flex items-center gap-2.5 cursor-pointer"
+            className="bg-blue-600 hover:bg-blue-700 active:scale-[0.98] disabled:opacity-40 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
           >
             {isSubmitting ? (
               <>
-                <span className="w-4 h-4 border-2 border-[#1d232c] border-t-transparent rounded-full animate-spin"></span>
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                 <span>Transmitting to Worker Node...</span>
               </>
             ) : (
               <>
-                <span>🚀 Offload & Render on Dedicated GPU</span>
+                <span>Offload & Render on Dedicated GPU</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}

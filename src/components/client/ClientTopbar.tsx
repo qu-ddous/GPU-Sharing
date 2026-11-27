@@ -19,52 +19,51 @@ export const ClientTopbar: React.FC<ClientTopbarProps> = ({ pageTitle, onNavigat
   const overallPercent = useJobStore((s) => s.overallPercent);
 
   return (
-    <header className="h-16 px-6 bg-[#222831]/80 backdrop-blur-xl border-b border-[#303640] flex items-center justify-between shrink-0 select-none shadow-[0_4px_20px_rgba(0,0,0,0.25)] relative z-10">
-      {/* Title */}
-      <div>
-        <h2 className="text-sm md:text-base font-bold text-[#eeeeee] tracking-wide flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#00adb5]"></span>
+    <header className="h-14 px-6 bg-white/90 backdrop-blur-sm border-b border-slate-200/80 flex items-center justify-between shrink-0 select-none">
+      {/* Page Title */}
+      <div className="flex items-center gap-2">
+        <h2 className="text-sm font-bold text-slate-800 tracking-tight">
           {pageTitle}
         </h2>
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
         {/* Active Job Quick Pill */}
         {activeJob && activeJob.status === 'rendering' && (
           <button
             onClick={onNavigateToJob}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00adb5]/20 border border-[#00adb5]/50 text-[#00adb5] text-xs font-bold hover:bg-[#00adb5]/30 transition-all shadow-[0_0_14px_rgba(0,173,181,0.3)] animate-pulse"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold hover:bg-blue-100 transition-all cursor-pointer"
           >
-            <Activity className="w-3.5 h-3.5 text-[#00adb5]" />
+            <Activity className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
             <span>Rendering {overallPercent.toFixed(1)}%</span>
-            <ArrowRight className="w-3 h-3 text-[#00adb5]" />
+            <ArrowRight className="w-3 h-3" />
           </button>
         )}
 
-        {/* Connection Status Glass Pill */}
+        {/* Connection Status Pill */}
         <button
           onClick={() => connect()}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-180 backdrop-blur-md shadow-xs ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
             isConnected
-              ? 'bg-[#00adb5]/15 border-[#00adb5]/40 text-[#00adb5] hover:bg-[#00adb5]/25 hover:shadow-[0_0_14px_rgba(0,173,181,0.3)]'
-              : 'bg-red-500/15 border-red-500/40 text-red-300 hover:bg-red-500/25'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100'
+              : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
           }`}
           title={isConnected ? 'Connected to GPU Node. Click to re-ping.' : 'Offline. Click to retry connection.'}
         >
           {isConnected ? (
             <>
-              <span className="w-2 h-2 rounded-full bg-[#00adb5] animate-ping"></span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
               <Wifi className="w-3.5 h-3.5" />
-              <span>
+              <span className="font-mono text-[11px]">
                 {serverIp}:{serverPort} ({latencyMs.toFixed(1)} ms)
               </span>
             </>
           ) : (
             <>
-              <span className="w-2 h-2 rounded-full bg-red-400"></span>
-              <WifiOff className="w-3.5 h-3.5" />
-              <span>GPU Host Offline</span>
+              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+              <WifiOff className="w-3.5 h-3.5 text-slate-400" />
+              <span>Worker Offline • Retry</span>
             </>
           )}
         </button>
