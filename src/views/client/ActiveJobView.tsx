@@ -62,8 +62,8 @@ export const ActiveJobView: React.FC = () => {
       {/* Top Status & Job Header Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-md shadow-rose-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
-            <Radio className={`w-5 h-5 ${activeJob?.status === 'rendering' ? 'animate-pulse' : ''}`} />
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-md shadow-rose-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <Radio className={`w-6 h-6 ${activeJob?.status === 'rendering' ? 'animate-pulse' : ''}`} />
           </div>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -106,7 +106,7 @@ export const ActiveJobView: React.FC = () => {
               onClick={cancelActiveJob}
               className="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer"
             >
-              <Square className="w-3.5 h-3.5 fill-current" />
+              <Square className="w-4 h-4 fill-current" />
               <span>Cancel Task</span>
             </button>
           ) : (
@@ -114,7 +114,7 @@ export const ActiveJobView: React.FC = () => {
               onClick={() => fetchHealth()}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 shadow-xs cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-4 h-4" />
               <span>Refresh Telemetry</span>
             </button>
           )}
@@ -123,7 +123,7 @@ export const ActiveJobView: React.FC = () => {
             onClick={handleOpenFolder}
             className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 shadow-xs cursor-pointer"
           >
-            <FolderOpen className="w-3.5 h-3.5 text-amber-600" />
+            <FolderOpen className="w-4 h-4 text-amber-600" />
             <span>Open Output Folder</span>
           </button>
         </div>
@@ -135,7 +135,7 @@ export const ActiveJobView: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Encode Speed</span>
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Zap className="w-4 h-4" />
+              <Zap className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">
@@ -150,7 +150,7 @@ export const ActiveJobView: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Elapsed Time</span>
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">{formatTime(elapsedSeconds)}</p>
@@ -163,7 +163,7 @@ export const ActiveJobView: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Remote GPU</span>
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-600 to-violet-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Cpu className="w-4 h-4" />
+              <Cpu className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">{liveGpuPercent}%</p>
@@ -174,7 +174,7 @@ export const ActiveJobView: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Laptop Load</span>
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <HardDrive className="w-4 h-4" />
+              <HardDrive className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-emerald-600 font-mono">0.0%</p>
@@ -215,14 +215,14 @@ export const ActiveJobView: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
         <div className="px-5 py-3 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-cyan-700" />
+            <Terminal className="w-[18px] h-[18px] text-cyan-700" />
             <span className="text-xs font-bold text-slate-800">Remote Worker Console Stream</span>
           </div>
           <button
             onClick={clearLogs}
             className="text-[11px] font-semibold text-slate-600 hover:text-rose-700 flex items-center gap-1 transition-colors cursor-pointer"
           >
-            <RotateCcw className="w-3 h-3 text-rose-600" />
+            <RotateCcw className="w-3.5 h-3.5 text-rose-600" />
             <span>Clear Buffer</span>
           </button>
         </div>
@@ -290,9 +290,9 @@ export const ActiveJobView: React.FC = () => {
                           ? 'bg-blue-50 border-blue-200 text-blue-700'
                           : 'bg-rose-50 border-rose-200 text-rose-700'
                       }`}>
-                        {job.status === 'completed' && <CheckCircle2 className="w-3 h-3" />}
-                        {job.status === 'rendering' && <Clock className="w-3 h-3 animate-spin" />}
-                        {job.status === 'failed' && <AlertCircle className="w-3 h-3" />}
+                        {job.status === 'completed' && <CheckCircle2 className="w-3.5 h-3.5" />}
+                        {job.status === 'rendering' && <Clock className="w-3.5 h-3.5 animate-spin" />}
+                        {job.status === 'failed' && <AlertCircle className="w-3.5 h-3.5" />}
                         <span className="uppercase">{job.status}</span>
                       </span>
                     </td>

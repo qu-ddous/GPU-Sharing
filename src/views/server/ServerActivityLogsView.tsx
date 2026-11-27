@@ -26,8 +26,8 @@ export const ServerActivityLogsView: React.FC = () => {
     <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
-            <ScrollText className="w-5 h-5" />
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <ScrollText className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
@@ -44,7 +44,7 @@ export const ServerActivityLogsView: React.FC = () => {
             onClick={clearLogs}
             className="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
           >
-            <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+            <Trash2 className="w-4 h-4 text-rose-600" />
             <span>Clear Logs</span>
           </button>
 
@@ -52,7 +52,7 @@ export const ServerActivityLogsView: React.FC = () => {
             onClick={handleExport}
             className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer transition-all"
           >
-            <Download className="w-3.5 h-3.5 text-white" />
+            <Download className="w-4 h-4 text-white" />
             <span>Export Log (.txt)</span>
           </button>
         </div>
@@ -61,7 +61,7 @@ export const ServerActivityLogsView: React.FC = () => {
       {/* Filter and Log Box */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
         <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex items-center gap-2.5">
-          <Search className="w-4 h-4 text-cyan-700" />
+          <Search className="w-[18px] h-[18px] text-cyan-700" />
           <input
             type="text"
             value={searchTerm}

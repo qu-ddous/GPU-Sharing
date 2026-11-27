@@ -35,9 +35,9 @@ export const ClientTopbar: React.FC<ClientTopbarProps> = ({ pageTitle, onNavigat
             onClick={onNavigateToJob}
             className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold hover:bg-blue-100 transition-all cursor-pointer"
           >
-            <Activity className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
+            <Activity className="w-4 h-4 text-blue-600 animate-pulse" />
             <span>Rendering {overallPercent.toFixed(1)}%</span>
-            <ArrowRight className="w-3 h-3" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         )}
 
@@ -54,7 +54,7 @@ export const ClientTopbar: React.FC<ClientTopbarProps> = ({ pageTitle, onNavigat
           {isConnected ? (
             <>
               <span className="w-2 h-2 rounded-full bg-emerald-600 shadow-sm shadow-emerald-500/50"></span>
-              <Wifi className="w-3.5 h-3.5 text-emerald-700" />
+              <Wifi className="w-4 h-4 text-emerald-700" />
               <span className="font-mono text-[11px]">
                 {serverIp}:{serverPort} ({latencyMs.toFixed(1)} ms)
               </span>
@@ -62,7 +62,7 @@ export const ClientTopbar: React.FC<ClientTopbarProps> = ({ pageTitle, onNavigat
           ) : (
             <>
               <span className="w-2 h-2 rounded-full bg-rose-600 shadow-sm shadow-rose-500/50"></span>
-              <WifiOff className="w-3.5 h-3.5 text-rose-600" />
+              <WifiOff className="w-4 h-4 text-rose-600" />
               <span>Worker Offline • Retry</span>
             </>
           )}

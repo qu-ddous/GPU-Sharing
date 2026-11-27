@@ -34,8 +34,8 @@ export const ServerGPUEngineView: React.FC = () => {
       {/* Header */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
-            <Cpu className="w-5 h-5" />
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <Cpu className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
@@ -52,7 +52,7 @@ export const ServerGPUEngineView: React.FC = () => {
           disabled={testRunning}
           className="bg-blue-600 hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 text-white px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
         >
-          <FlaskConical className="w-4 h-4 text-cyan-200" />
+          <FlaskConical className="w-[18px] h-[18px] text-cyan-200" />
           <span>{testRunning ? 'Running Diagnostics...' : 'Run Hardware Self-Test'}</span>
         </button>
       </div>
@@ -68,8 +68,8 @@ export const ServerGPUEngineView: React.FC = () => {
         {/* Left Card: Compute Node Specs */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
           <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2.5">
-            <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Layers className="w-3.5 h-3.5" />
+            <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Layers className="w-4 h-4" />
             </span>
             <span>Compute Node Hardware Profile</span>
           </h3>

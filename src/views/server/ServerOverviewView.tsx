@@ -82,7 +82,7 @@ export const ServerOverviewView: React.FC = () => {
             onClick={handleCopyIp}
             className="bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
           >
-            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            {copied ? <Check className="w-[18px] h-[18px]" /> : <Copy className="w-[18px] h-[18px]" />}
             <span>{copied ? 'IP Copied!' : `Copy IP (${workerIp}:${workerPort})`}</span>
           </button>
 
@@ -94,7 +94,7 @@ export const ServerOverviewView: React.FC = () => {
                 : 'bg-rose-600 hover:bg-rose-700 text-white'
             }`}
           >
-            <Power className="w-4 h-4" />
+            <Power className="w-[18px] h-[18px]" />
             <span>{daemonOnline ? 'Daemon Active' : 'Start Daemon'}</span>
           </button>
         </div>
@@ -106,8 +106,8 @@ export const ServerOverviewView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between gap-3">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">HOST CPU LOAD</span>
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Cpu className="w-4 h-4" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Cpu className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">
@@ -125,8 +125,8 @@ export const ServerOverviewView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between gap-3">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">SYSTEM RAM</span>
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <HardDrive className="w-4 h-4" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <HardDrive className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">
@@ -144,8 +144,8 @@ export const ServerOverviewView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between gap-3">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">GPU COMPUTE</span>
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Activity className="w-4 h-4" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Activity className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">
@@ -158,8 +158,8 @@ export const ServerOverviewView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between gap-3">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">GPU VRAM & TEMP</span>
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Thermometer className="w-4 h-4" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Thermometer className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-2xl font-extrabold text-slate-900 font-mono">
@@ -175,8 +175,8 @@ export const ServerOverviewView: React.FC = () => {
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-700 text-white shadow-md shadow-cyan-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Network className="w-4 h-4" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-700 text-white shadow-md shadow-cyan-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Network className="w-[18px] h-[18px]" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900">Direct Ethernet LAN Status</h3>
@@ -203,16 +203,16 @@ export const ServerOverviewView: React.FC = () => {
       {/* Connected Clients Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
         <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2.5">
-          <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
-            <Users className="w-3.5 h-3.5" />
+          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
+            <Users className="w-4 h-4" />
           </span>
           <span>Active Connected Laptop Clients</span>
         </h3>
 
         {activeSessions.length === 0 ? (
           <div className="p-8 text-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50 space-y-2.5">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-md shadow-rose-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center mx-auto">
-              <Radio className="w-5 h-5" />
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-md shadow-rose-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center mx-auto">
+              <Radio className="w-6 h-6" />
             </div>
             <p className="text-xs font-bold text-slate-800">Awaiting Client Connection</p>
             <p className="text-[11px] text-slate-500 max-w-md mx-auto">

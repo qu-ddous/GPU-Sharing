@@ -19,8 +19,8 @@ export const ServerNetworkView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-2">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase font-sans">Daemon Service</span>
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Server className="w-4 h-4" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Server className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-xl font-extrabold text-slate-900">Listening (:{workerPort})</p>
@@ -32,10 +32,10 @@ export const ServerNetworkView: React.FC = () => {
             <span className="text-[11px] font-bold text-slate-400 uppercase font-sans">Worker Node IP</span>
             <button
               onClick={handleCopy}
-              className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center cursor-pointer"
+              className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center cursor-pointer"
               title="Copy IP"
             >
-              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {copied ? <Check className="w-[18px] h-[18px]" /> : <Copy className="w-[18px] h-[18px]" />}
             </button>
           </div>
           <p className="text-xl font-extrabold text-blue-600">{workerIp}</p>
@@ -45,8 +45,8 @@ export const ServerNetworkView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-2">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase font-sans">Active Sessions</span>
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-violet-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Users className="w-4 h-4" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-600 to-violet-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Users className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-xl font-extrabold text-slate-900">{activeClientCount} Connected</p>
@@ -56,8 +56,8 @@ export const ServerNetworkView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-2">
           <div className="flex items-start justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase font-sans">Session Transfer</span>
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-              <Activity className="w-4 h-4" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+              <Activity className="w-[18px] h-[18px]" />
             </div>
           </div>
           <p className="text-xl font-extrabold text-slate-900">{totalTransferredDisplay}</p>
@@ -68,8 +68,8 @@ export const ServerNetworkView: React.FC = () => {
       {/* Network Adapters Section */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
         <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2.5">
-          <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-600 to-blue-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
-            <Network className="w-3.5 h-3.5" />
+          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-600 to-blue-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
+            <Network className="w-4 h-4" />
           </span>
           <span>Detected Network Adapters & Direct Cable Interfaces</span>
         </h3>
@@ -118,8 +118,8 @@ export const ServerNetworkView: React.FC = () => {
       {/* Active Client Sessions Table */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
         <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2.5">
-          <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
-            <Users className="w-3.5 h-3.5" />
+          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
+            <Users className="w-4 h-4" />
           </span>
           <span>Active Connected Client Sessions</span>
         </h3>

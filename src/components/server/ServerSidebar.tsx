@@ -34,43 +34,43 @@ export const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentView, onNav
     {
       id: 'server_overview',
       label: 'Overview',
-      icon: <BarChart3 className="w-3.5 h-3.5" />,
+      icon: <BarChart3 className="w-4 h-4" />,
       badgeClass: 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-sm shadow-blue-600/30 ring-1 ring-inset ring-white/40'
     },
     {
       id: 'render_queue',
       label: 'Render Queue',
-      icon: <ListOrdered className="w-3.5 h-3.5" />,
+      icon: <ListOrdered className="w-4 h-4" />,
       badgeClass: 'bg-gradient-to-br from-violet-600 to-purple-700 text-white shadow-sm shadow-purple-600/30 ring-1 ring-inset ring-white/40'
     },
     {
       id: 'activity_logs',
       label: 'Activity Logs',
-      icon: <ScrollText className="w-3.5 h-3.5" />,
+      icon: <ScrollText className="w-4 h-4" />,
       badgeClass: 'bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-sm shadow-amber-500/30 ring-1 ring-inset ring-white/40'
     },
     {
       id: 'gpu_engine',
       label: 'GPU & Engine',
-      icon: <Cpu className="w-3.5 h-3.5" />,
+      icon: <Cpu className="w-4 h-4" />,
       badgeClass: 'bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-sm shadow-rose-600/30 ring-1 ring-inset ring-white/40'
     },
     {
       id: 'network',
       label: 'Network',
-      icon: <Network className="w-3.5 h-3.5" />,
+      icon: <Network className="w-4 h-4" />,
       badgeClass: 'bg-gradient-to-br from-cyan-600 to-teal-700 text-white shadow-sm shadow-cyan-600/30 ring-1 ring-inset ring-white/40'
     },
     {
       id: 'server_settings',
       label: 'Settings',
-      icon: <Settings className="w-3.5 h-3.5" />,
+      icon: <Settings className="w-4 h-4" />,
       badgeClass: 'bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-sm shadow-slate-700/30 ring-1 ring-inset ring-white/30'
     },
     {
       id: 'server_docs',
       label: 'Docs & Guide',
-      icon: <BookOpen className="w-3.5 h-3.5" />,
+      icon: <BookOpen className="w-4 h-4" />,
       badgeClass: 'bg-gradient-to-br from-emerald-600 to-green-700 text-white shadow-sm shadow-emerald-600/30 ring-1 ring-inset ring-white/40'
     },
   ];
@@ -80,8 +80,8 @@ export const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentView, onNav
       <div className="space-y-6 overflow-y-auto">
         {/* Clean Brand Header matching Client Studio */}
         <div className="flex items-center gap-3 px-1 pt-1">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40">
-            <Zap className="w-4 h-4 fill-current drop-shadow-sm" />
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40">
+            <Zap className="w-[18px] h-[18px] fill-current drop-shadow-sm" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
@@ -119,7 +119,7 @@ export const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentView, onNav
                 }`}
               >
                 <span
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
                     isActive
                       ? 'bg-white/20 text-white ring-1 ring-inset ring-white/40 shadow-inner'
                       : item.badgeClass
@@ -155,8 +155,8 @@ export const ServerSidebar: React.FC<ServerSidebarProps> = ({ currentView, onNav
         </div>
 
         <div className="px-3 py-2 rounded-xl border bg-emerald-50/70 border-emerald-200/80 text-emerald-900 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
-            <Cpu className="w-3.5 h-3.5" />
+          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <Cpu className="w-4 h-4" />
           </span>
           <span className="text-[11px] font-bold truncate">{gpuName}</span>
         </div>

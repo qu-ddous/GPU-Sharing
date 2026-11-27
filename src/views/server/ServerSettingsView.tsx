@@ -53,8 +53,8 @@ export const ServerSettingsView: React.FC = () => {
     <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-md shadow-slate-700/30 ring-1 ring-inset ring-white/30 flex items-center justify-center shrink-0">
-            <Settings className="w-5 h-5" />
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-md shadow-slate-700/30 ring-1 ring-inset ring-white/30 flex items-center justify-center shrink-0">
+            <Settings className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">Worker Server Configuration</h2>
@@ -76,7 +76,7 @@ export const ServerSettingsView: React.FC = () => {
             subTab === 'startup' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Power className="w-3.5 h-3.5 text-emerald-600" />
+          <Power className="w-4 h-4 text-emerald-600" />
           <span>Startup & Daemon</span>
         </button>
 
@@ -86,7 +86,7 @@ export const ServerSettingsView: React.FC = () => {
             subTab === 'render' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Film className="w-3.5 h-3.5 text-violet-700" />
+          <Film className="w-4 h-4 text-violet-700" />
           <span>Render Defaults</span>
         </button>
 
@@ -96,7 +96,7 @@ export const ServerSettingsView: React.FC = () => {
             subTab === 'storage' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <HardDrive className="w-3.5 h-3.5 text-amber-600" />
+          <HardDrive className="w-4 h-4 text-amber-600" />
           <span>Storage & Files</span>
         </button>
 
@@ -106,7 +106,7 @@ export const ServerSettingsView: React.FC = () => {
             subTab === 'security' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Shield className="w-3.5 h-3.5 text-rose-600" />
+          <Shield className="w-4 h-4 text-rose-600" />
           <span>Security & Token</span>
         </button>
       </div>
@@ -233,7 +233,7 @@ export const ServerSettingsView: React.FC = () => {
               <div className="flex gap-2">
                 <input type="text" value={secretToken} onChange={e => setSecretToken(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900" />
                 <button onClick={handleGenerateToken} className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 font-sans flex items-center gap-1.5 cursor-pointer">
-                  <Key className="w-3.5 h-3.5 text-amber-600" />
+                  <Key className="w-4 h-4 text-amber-600" />
                   <span>Generate</span>
                 </button>
               </div>
@@ -245,7 +245,7 @@ export const ServerSettingsView: React.FC = () => {
       {/* Save Action */}
       <div className="flex justify-end pt-1">
         <button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs cursor-pointer transition-all">
-          <Save className="w-4 h-4" />
+          <Save className="w-[18px] h-[18px]" />
           <span>Save Configuration</span>
         </button>
       </div>

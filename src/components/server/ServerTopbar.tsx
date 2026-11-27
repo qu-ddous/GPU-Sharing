@@ -49,7 +49,7 @@ export const ServerTopbar: React.FC = () => {
               : 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100'
           }`}
         >
-          <Power className={`w-3.5 h-3.5 ${daemonOnline ? 'text-emerald-700' : 'text-rose-600'}`} />
+          <Power className={`w-4 h-4 ${daemonOnline ? 'text-emerald-700' : 'text-rose-600'}`} />
           <span>{daemonOnline ? 'Daemon Running' : 'Daemon Paused'}</span>
         </button>
 
@@ -60,7 +60,7 @@ export const ServerTopbar: React.FC = () => {
           title="Click to copy IP for laptop client"
         >
           <span>{workerIp}:{workerPort}</span>
-          {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-cyan-700" />}
+          {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-cyan-700" />}
         </button>
 
         {/* Windows Firewall Elevation Button */}
@@ -69,13 +69,13 @@ export const ServerTopbar: React.FC = () => {
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-all cursor-pointer"
           title="Unblock Port 8000 in Windows Firewall"
         >
-          <Shield className="w-3.5 h-3.5 text-indigo-700" />
+          <Shield className="w-4 h-4 text-indigo-700" />
           <span>{firewallToast ? 'Firewall Allowed ✔' : 'Unblock Firewall'}</span>
         </button>
 
         {/* Active Client Badge */}
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold">
-          <Users className="w-3.5 h-3.5 text-blue-700" />
+          <Users className="w-4 h-4 text-blue-700" />
           <span>{activeClientCount} Connected</span>
         </div>
       </div>

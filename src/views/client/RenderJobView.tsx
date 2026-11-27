@@ -155,7 +155,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Film className="w-4 h-4 text-violet-700" />
+          <Film className="w-[18px] h-[18px] text-violet-700" />
           <span>Video Transcode (NVENC)</span>
         </button>
 
@@ -168,7 +168,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Terminal className="w-4 h-4 text-amber-600" />
+          <Terminal className="w-[18px] h-[18px] text-amber-600" />
           <span>Batch & Shell Automation</span>
         </button>
 
@@ -181,7 +181,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <FolderArchive className="w-4 h-4 text-cyan-700" />
+          <FolderArchive className="w-[18px] h-[18px] text-cyan-700" />
           <span>Universal Folder Runner</span>
         </button>
       </div>
@@ -195,7 +195,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
               <p className="text-xs text-slate-500">Pick a source video, batch script, or complete project workspace.</p>
             </div>
             <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+              <ShieldCheck className="w-4 h-4 text-emerald-700" />
               Direct 2.5 Gbps P2P Pipeline
             </span>
           </div>
@@ -204,7 +204,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
             onClick={profile === 'universal' ? handleBrowseFolder : handleBrowseFile}
             className="p-7 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 hover:bg-slate-50 hover:border-blue-400 transition-all flex flex-col items-center justify-center text-center space-y-3 cursor-pointer"
           >
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
               {profile === 'universal' ? <FolderArchive className="w-6 h-6" /> : <FileVideo className="w-6 h-6" />}
             </div>
             <div>
@@ -220,7 +220,7 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
               type="button"
               className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs transition-all flex items-center gap-2 pointer-events-none"
             >
-              <UploadCloud className="w-4 h-4" />
+              <UploadCloud className="w-[18px] h-[18px]" />
               <span>{selectedFile ? 'Change Selection' : 'Browse File'}</span>
             </button>
 
@@ -237,8 +237,8 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
         {profile === 'video' && (
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-sm shadow-indigo-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
-                <Sliders className="w-3.5 h-3.5" />
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-sm shadow-indigo-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+                <Sliders className="w-4 h-4" />
               </div>
               <h3 className="text-sm font-bold text-slate-900">Hardware Transcode Settings (NVENC)</h3>
             </div>
@@ -378,13 +378,13 @@ export const RenderJobView: React.FC<RenderJobViewProps> = ({ onJobSubmitted }) 
           >
             {isSubmitting ? (
               <>
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                <span className="w-[18px] h-[18px] border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                 <span>Transmitting to Worker Node...</span>
               </>
             ) : (
               <>
                 <span>Offload & Render on Dedicated GPU</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-[18px] h-[18px]" />
               </>
             )}
           </button>

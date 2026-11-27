@@ -11,8 +11,8 @@ export const ServerRenderQueueView: React.FC = () => {
     <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100vh-3.5rem)] w-full bg-[#F8FAFC] text-slate-900 font-sans">
       <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-purple-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
-            <ListOrdered className="w-5 h-5" />
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-600 to-purple-700 text-white shadow-md shadow-purple-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center shrink-0">
+            <ListOrdered className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
@@ -31,7 +31,7 @@ export const ServerRenderQueueView: React.FC = () => {
 
       {renderQueue.length === 0 ? (
         <div className="bg-white p-12 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg shadow-blue-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center">
             <Inbox className="w-7 h-7" />
           </div>
           <h3 className="text-base font-bold text-slate-900">No Jobs in Queue</h3>

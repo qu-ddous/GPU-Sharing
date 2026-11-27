@@ -75,7 +75,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <BrainCircuit className="w-4 h-4 text-cyan-700" />
+          <BrainCircuit className="w-[18px] h-[18px] text-cyan-700" />
           <span>Remote CNN Training</span>
         </button>
 
@@ -87,7 +87,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Search className="w-4 h-4 text-fuchsia-700" />
+          <Search className="w-[18px] h-[18px] text-fuchsia-700" />
           <span>Visual Object Classifier</span>
         </button>
 
@@ -99,7 +99,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <FileCode className="w-4 h-4 text-indigo-700" />
+          <FileCode className="w-[18px] h-[18px] text-indigo-700" />
           <span>Custom Python Runner</span>
         </button>
 
@@ -111,7 +111,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Zap className="w-4 h-4 text-amber-600" />
+          <Zap className="w-[18px] h-[18px] text-amber-600" />
           <span>CPU vs GPU Suite</span>
         </button>
       </div>
@@ -128,7 +128,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-blue-700 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-violet-700" />
+                    <Sparkles className="w-[18px] h-[18px] text-violet-700" />
                     {datasetName}
                   </span>
                   <span className="text-xs font-mono font-bold text-blue-900">{totalDatasetImages.toLocaleString()} Tensors</span>
@@ -211,7 +211,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                     onClick={cancelTraining}
                     className="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <Square className="w-4 h-4 fill-current" />
+                    <Square className="w-[18px] h-[18px] fill-current" />
                     <span>Cancel Training Job</span>
                   </button>
                 ) : (
@@ -219,7 +219,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                     onClick={startTraining}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                   >
-                    <Play className="w-4 h-4 fill-current" />
+                    <Play className="w-[18px] h-[18px] fill-current" />
                     <span>Start Remote Training on GPU</span>
                   </button>
                 )}
@@ -274,8 +274,8 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-5">
             <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
-                <Camera className="w-3.5 h-3.5" />
+              <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-600 to-pink-700 text-white shadow-sm ring-1 ring-inset ring-white/40 flex items-center justify-center">
+                <Camera className="w-4 h-4" />
               </span>
               <span>Camera Viewfinder & Image Input</span>
             </h3>
@@ -316,7 +316,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
             </div>
 
             <label className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-xs font-semibold text-slate-700 transition-all">
-              <Upload className="w-4 h-4 text-blue-600" />
+              <Upload className="w-[18px] h-[18px] text-blue-600" />
               <span>Upload Custom Image for Classification</span>
               <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
             </label>
@@ -416,7 +416,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
           >
-            <Play className="w-4 h-4 fill-current" />
+            <Play className="w-[18px] h-[18px] fill-current" />
             <span>Execute Script on Remote GPU</span>
           </button>
         </div>
@@ -438,7 +438,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
               disabled={isBenchmarking}
               className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer"
             >
-              <Zap className="w-4 h-4" />
+              <Zap className="w-[18px] h-[18px]" />
               <span>{isBenchmarking ? 'Running Benchmarks...' : 'Run Comparative Suite'}</span>
             </button>
           </div>
@@ -449,7 +449,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-slate-500 uppercase">Local Laptop CPU</span>
-                    <Cpu className="w-4 h-4 text-slate-400" />
+                    <Cpu className="w-[18px] h-[18px] text-slate-400" />
                   </div>
                   <p className="text-3xl font-extrabold text-slate-900 font-mono">
                     {benchmarkResult.cpuThroughput} <span className="text-sm font-normal text-slate-400">img/s</span>
@@ -460,7 +460,7 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
                 <div className="p-5 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-blue-700 uppercase">Remote NVIDIA RTX GPU</span>
-                    <Zap className="w-4 h-4 text-blue-600" />
+                    <Zap className="w-[18px] h-[18px] text-blue-600" />
                   </div>
                   <p className="text-3xl font-extrabold text-blue-700 font-mono">
                     {benchmarkResult.gpuThroughput} <span className="text-sm font-normal text-blue-500">img/s</span>
@@ -471,8 +471,8 @@ export const AIStudioView: React.FC<AIStudioViewProps> = ({ onNavigate }) => {
 
               <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center font-bold">
-                    <Award className="w-5 h-5" />
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30 ring-1 ring-inset ring-white/40 flex items-center justify-center font-bold">
+                    <Award className="w-6 h-6" />
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-emerald-900">
